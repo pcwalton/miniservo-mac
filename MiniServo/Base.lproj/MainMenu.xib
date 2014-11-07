@@ -17,6 +17,7 @@
                 <outlet property="backForwardButton" destination="ujA-Th-KoY" id="5LG-QC-Xkl"/>
                 <outlet property="browserView" destination="HNl-cX-qrh" id="L3d-AO-f09"/>
                 <outlet property="stopReloadButton" destination="0Al-l4-ZH0" id="XCK-FU-zT7"/>
+                <outlet property="urlBar" destination="jP8-vH-xB8" id="cvt-Aw-Uwc"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -337,18 +338,18 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="MiniServo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="MiniServo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="360"/>
+            <rect key="contentRect" x="335" y="390" width="960" height="750"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                <rect key="frame" x="0.0" y="0.0" width="960" height="750"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <segmentedControl verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ujA-Th-KoY">
-                        <rect key="frame" x="7" y="331" width="72" height="25"/>
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ujA-Th-KoY">
+                        <rect key="frame" x="7" y="721" width="68" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <segmentedCell key="cell" alignment="left" style="texturedRounded" trackingMode="momentary" id="y8N-Uy-e0u">
                             <font key="font" size="13" name="AppleGothic"/>
@@ -361,11 +362,11 @@
                             </connections>
                         </segmentedCell>
                     </segmentedControl>
-                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jP8-vH-xB8">
-                        <rect key="frame" x="81" y="333" width="392" height="22"/>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jP8-vH-xB8">
+                        <rect key="frame" x="77" y="724" width="876" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Search or enter address" drawsBackground="YES" id="ZwR-8Z-Udv">
-                            <font key="font" metaFont="controlContent"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -374,7 +375,7 @@
                         </connections>
                     </textField>
                     <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Al-l4-ZH0">
-                        <rect key="frame" x="448" y="327" width="21" height="32"/>
+                        <rect key="frame" x="928" y="717" width="21" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="bevel" title="⟲" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="MPe-oJ-ZAt">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -385,7 +386,7 @@
                         </connections>
                     </button>
                     <openGLView ambiguous="YES" misplaced="YES" useAuxiliaryDepthBufferStencil="NO" useDoubleBufferingEnabled="YES" allowOffline="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HNl-cX-qrh" customClass="MSView">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="327"/>
+                        <rect key="frame" x="0.0" y="0.0" width="960" height="717"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </openGLView>
                 </subviews>
@@ -398,6 +399,7 @@
                     <constraint firstAttribute="bottom" secondItem="HNl-cX-qrh" secondAttribute="bottom" id="a8X-2M-PFB"/>
                     <constraint firstItem="jP8-vH-xB8" firstAttribute="leading" secondItem="ujA-Th-KoY" secondAttribute="trailing" constant="2" id="foO-ve-BzA"/>
                     <constraint firstAttribute="trailing" secondItem="HNl-cX-qrh" secondAttribute="trailing" id="jhs-m4-pd8"/>
+                    <constraint firstItem="HNl-cX-qrh" firstAttribute="top" secondItem="0Al-l4-ZH0" secondAttribute="bottom" id="kZ0-AJ-zNn"/>
                     <constraint firstItem="jP8-vH-xB8" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="5" id="o3n-3O-rlz"/>
                 </constraints>
             </view>

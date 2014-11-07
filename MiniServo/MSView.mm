@@ -22,11 +22,6 @@
     surface = nil;
     texture = 0;
     
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(viewFrameDidChange:)
-                                                 name: NSViewFrameDidChangeNotification
-                                               object: self];
-    
     return self;
 }
 
@@ -61,8 +56,6 @@
     glFlush();
     
     [[self openGLContext] flushBuffer];
-    
-    NSLog(@"drawn!");
 }
 
 -(void)paint:(const void*)buffer withSize:(NSSize)size {
@@ -108,16 +101,43 @@
     if (cglError != kCGLNoError)
         NSLog(@"failed to upload!");
     
-    NSLog(@"painted!");
     [self setNeedsDisplay: YES];
-}
-
-- (void)viewFrameDidChange:(id)sender {
-    [appDelegate browserViewDidResize];
 }
 
 - (void)setAppDelegate:(MSAppDelegate *)newDelegate {
     appDelegate = newDelegate;
+}
+
+- (void)handleMouseEvent:(NSEvent*)event {
+    int button = MBT_LEFT;
+    switch ([event type]) {
+    case NSOtherMouseDown:
+    case NSOtherMouseUp:
+        button = MBT_MIDDLE;
+        break;
+    case NSRightMouseDown:
+    case NSRightMouseUp:
+        button = MBT_RIGHT;
+    }
+    
+    BOOL up = [event type] == NSOtherMouseUp || [event type] == NSRightMouseUp ||
+        [event type] == NSLeftMouseUp;
+
+    NSPoint point = [self convertPoint: [event locationInWindow] fromView:nil];
+    point.y = [self frame].size.height - point.y;
+    [appDelegate sendCEFMouseEventForButton: button up: up point: point];
+}
+
+- (void)mouseDown:(NSEvent*)event {
+    [self handleMouseEvent: event];
+}
+
+- (void)mouseUp:(NSEvent*)event {
+    [self handleMouseEvent: event];
+}
+
+- (BOOL)acceptsFirstResponder {
+    return YES;
 }
 
 @end

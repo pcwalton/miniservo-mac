@@ -17,19 +17,22 @@
 class CefBrowser;
 class MSCEFClient;
 
-@interface MSAppDelegate : NSObject <NSApplicationDelegate> {
+@interface MSAppDelegate : NSObject <NSApplicationDelegate, NSTextFieldDelegate, NSWindowDelegate> {
     CefRefPtr<CefBrowser> mBrowser;
     CefRefPtr<MSCEFClient> mCEFClient;
+    BOOL mDoingWork;
 }
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSSegmentedControl *backForwardButton;
 @property (assign) IBOutlet NSButton *stopReloadButton;
+@property (assign) IBOutlet NSTextField *urlBar;
 @property (assign) IBOutlet MSView *browserView;
 
--(IBAction)goBackOrForward:(id)sender;
--(IBAction)stopOrReload:(id)sender;
--(IBAction)navigateToURL:(id)sender;
--(void)browserViewDidResize;
+- (IBAction)goBackOrForward:(id)sender;
+- (IBAction)stopOrReload:(id)sender;
+- (void)windowDidResize:(NSNotification*)notification;
+- (void)sendCEFMouseEventForButton:(int)button up:(BOOL)up point:(NSPoint)point;
+- (void)setCanGoBack:(BOOL)canGoBack forward:(BOOL)canGoForward;
 
 @end

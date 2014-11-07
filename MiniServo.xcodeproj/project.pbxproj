@@ -172,7 +172,7 @@
 		6A8C76EE1A0C2C83000925F5 /* MSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSView.h; sourceTree = "<group>"; };
 		6A8C76EF1A0C2C83000925F5 /* MSView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSView.mm; sourceTree = "<group>"; };
 		6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSAppDelegate.mm; sourceTree = "<group>"; };
-		6A8C76F31A0C3218000925F5 /* Chromium Embedded Framework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Chromium Embedded Framework.framework"; path = "../../../../cef_binary_3.2171.1879_macosx64/Debug/Chromium Embedded Framework.framework"; sourceTree = "<group>"; };
+		6A8C76F31A0C3218000925F5 /* Chromium Embedded Framework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "Chromium Embedded Framework.framework"; path = "../../../cef_binary_3.2171.1879_macosx64/Debug/Chromium Embedded Framework.framework"; sourceTree = "<group>"; };
 		6A8C76F71A0C328C000925F5 /* cef_atomicops_x86_gcc.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_atomicops_x86_gcc.cc; sourceTree = "<group>"; };
 		6A8C76F81A0C328C000925F5 /* cef_bind_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_bind_helpers.cc; sourceTree = "<group>"; };
 		6A8C76F91A0C328C000925F5 /* cef_callback_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_callback_helpers.cc; sourceTree = "<group>"; };
@@ -488,7 +488,7 @@
 				6A8C77AF1A0C328C000925F5 /* wrapper */,
 			);
 			name = libcef_dll;
-			path = ../../../../cef_binary_3.2171.1879_macosx64/libcef_dll;
+			path = ../../../cef_binary_3.2171.1879_macosx64/libcef_dll;
 			sourceTree = "<group>";
 		};
 		6A8C76F61A0C328C000925F5 /* base */ = {
@@ -1150,6 +1150,7 @@
 				6A8C76EA1A0C06EE000925F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6A8C76EB1A0C06EE000925F5 /* Build configuration list for PBXNativeTarget "MiniServoTests" */ = {
 			isa = XCConfigurationList;
@@ -1158,6 +1159,7 @@
 				6A8C76ED1A0C06EE000925F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
