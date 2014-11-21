@@ -14,16 +14,63 @@
 #include <include/cef_browser.h>
 #include <include/cef_client.h>
 
+#include <dlfcn.h>
+
 #define BACK_SEGMENT    0
 #define FORWARD_SEGMENT 1
 
 @implementation MSAppDelegate
+
+- (IBAction)changeFrameworkPath:(id)sender
+{
+    NSString *newFrameworkPath = [self promptForNewFrameworkPath];
+    if (newFrameworkPath != nil) {
+        [[NSUserDefaults standardUserDefaults] setObject: newFrameworkPath
+                                                  forKey: @"ServoFrameworkPath"];
+    }
+}
+
+- (NSString *)promptForNewFrameworkPath
+{
+    NSOpenPanel *openPanel = [[NSOpenPanel alloc] init];
+    [openPanel setCanChooseDirectories:NO];
+    [openPanel setCanChooseFiles:YES];
+    [openPanel setTreatsFilePackagesAsDirectories:YES];
+    [openPanel setAllowedFileTypes: [NSArray arrayWithObject: @"dylib"]];
+    if ([openPanel runModal] != NSFileHandlingPanelOKButton)
+        return nil;
+    return [[[openPanel URLs] objectAtIndex:0] path];
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [self.window setDelegate:self];
     [self.browserView setAppDelegate:self];
     [self.urlBar setDelegate:self];
+
+    while (true) {
+        NSString *frameworkPath =
+        [[NSUserDefaults standardUserDefaults] stringForKey: @"ServoFrameworkPath"];
+        if (frameworkPath != nil && [frameworkPath length] > 0) {
+            if (dlopen([frameworkPath cStringUsingEncoding:NSUTF8StringEncoding],
+                       RTLD_LAZY) == nullptr) {
+                NSRunAlertPanel(@"Failed to open Servo library.",
+                                @"%s",
+                                @"OK",
+                                nil,
+                                nil,
+                                dlerror());
+            } else {
+                break;
+            }
+        }
+
+        NSString *newFrameworkPath = [self promptForNewFrameworkPath];
+        if (newFrameworkPath == nil)
+            exit(0);
+        [[NSUserDefaults standardUserDefaults] setObject: newFrameworkPath
+                                                  forKey: @"ServoFrameworkPath"];
+    }
     
     NSArray *arguments = [[NSProcessInfo processInfo] arguments];
     char **cArguments = new char *[[arguments count]];

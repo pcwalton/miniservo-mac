@@ -35,7 +35,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" enabled="NO" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                <connections>
+                                    <action selector="makeKeyAndOrderFront:" target="8Al-QU-20c" id="ZSR-6b-A0o"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -341,7 +345,6 @@
         <window title="MiniServo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="960" height="750"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="EiT-Mj-1SZ">
@@ -411,5 +414,71 @@
                 </constraints>
             </view>
         </window>
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="8Al-QU-20c">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
+            <rect key="contentRect" x="493" y="390" width="479" height="95"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="300" height="95"/>
+            <value key="maxSize" type="size" width="1000" height="95"/>
+            <view key="contentView" id="OtV-pI-5Q9">
+                <rect key="frame" x="0.0" y="0.0" width="479" height="95"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZbM-wZ-0rS">
+                        <rect key="frame" x="17" y="58" width="189" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of Servo framework:" id="Saw-4a-fXM">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X1p-rC-9R3">
+                        <rect key="frame" x="208" y="18" width="254" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="You will need to restart MiniServo for changes to this location to take effect." id="0Bw-nt-ksx">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wO1-0Z-Vcu">
+                        <rect key="frame" x="208" y="58" width="167" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="truncatingHead" sendsActionOnEndEditing="YES" title="/Source/servo/framework" id="XSV-No-dbB">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="nYE-RQ-Ymh" name="value" keyPath="values.ServoFrameworkPath" id="BCP-3c-eai"/>
+                        </connections>
+                    </textField>
+                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g4n-Kq-YBO">
+                        <rect key="frame" x="374" y="48" width="101" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="89" id="dzB-Ka-Bg6"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Change…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gld-vf-nSh">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeFrameworkPath:" target="Voe-Tx-rLC" id="wIM-rx-Gcb"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="g4n-Kq-YBO" secondAttribute="trailing" constant="20" id="N0V-iW-X91"/>
+                    <constraint firstItem="ZbM-wZ-0rS" firstAttribute="leading" secondItem="OtV-pI-5Q9" secondAttribute="leading" constant="20" id="h6p-Cr-vcv"/>
+                    <constraint firstItem="g4n-Kq-YBO" firstAttribute="leading" secondItem="wO1-0Z-Vcu" secondAttribute="trailing" constant="8" id="i0y-Qh-d2Z"/>
+                    <constraint firstItem="wO1-0Z-Vcu" firstAttribute="leading" secondItem="ZbM-wZ-0rS" secondAttribute="trailing" constant="8" id="p4f-YM-dvg"/>
+                    <constraint firstItem="X1p-rC-9R3" firstAttribute="leading" secondItem="OtV-pI-5Q9" secondAttribute="leading" constant="211" id="q1x-Rb-vqf"/>
+                    <constraint firstAttribute="trailing" secondItem="X1p-rC-9R3" secondAttribute="trailing" constant="20" id="x2a-aP-PpG"/>
+                </constraints>
+            </view>
+        </window>
+        <userDefaultsController representsSharedInstance="YES" id="nYE-RQ-Ymh"/>
     </objects>
 </document>

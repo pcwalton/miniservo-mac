@@ -29,8 +29,10 @@ class MSCEFClient;
 @property (assign) IBOutlet NSTextField *urlBar;
 @property (assign) IBOutlet MSView *browserView;
 
+- (IBAction)changeFrameworkPath:(id)sender;
 - (IBAction)goBackOrForward:(id)sender;
 - (IBAction)stopOrReload:(id)sender;
+- (NSString *)promptForNewFrameworkPath;
 - (void)spinCEFEventLoop:(id)nothing;
 - (void)windowDidResize:(NSNotification*)notification;
 - (void)sendCEFMouseEventForButton:(int)button up:(BOOL)up point:(NSPoint)point;

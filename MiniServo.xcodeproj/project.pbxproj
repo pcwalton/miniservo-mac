@@ -118,7 +118,6 @@
 		6A3FA6FD1A1D63B7001BC19E /* quotes.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FA6F61A1D63B7001BC19E /* quotes.css */; };
 		6A3FA6FE1A1D63B7001BC19E /* servo.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FA6F71A1D63B7001BC19E /* servo.css */; };
 		6A3FA6FF1A1D63B7001BC19E /* user-agent.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FA6F81A1D63B7001BC19E /* user-agent.css */; };
-		6A3FAA691A1EF9AC001BC19E /* libembedding-e53e83ea1c6515b7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A3FAA681A1EF9AC001BC19E /* libembedding-e53e83ea1c6515b7.dylib */; };
 		6A8C76BB1A0C06EE000925F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A8C76BA1A0C06EE000925F5 /* Cocoa.framework */; };
 		6A8C76C51A0C06EE000925F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A8C76C31A0C06EE000925F5 /* InfoPlist.strings */; };
 		6A8C76C71A0C06EE000925F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76C61A0C06EE000925F5 /* main.m */; };
@@ -356,7 +355,6 @@
 		6A3FA6F61A1D63B7001BC19E /* quotes.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = quotes.css; sourceTree = "<group>"; };
 		6A3FA6F71A1D63B7001BC19E /* servo.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = servo.css; sourceTree = "<group>"; };
 		6A3FA6F81A1D63B7001BC19E /* user-agent.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "user-agent.css"; sourceTree = "<group>"; };
-		6A3FAA681A1EF9AC001BC19E /* libembedding-e53e83ea1c6515b7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libembedding-e53e83ea1c6515b7.dylib"; path = "../../servo/mozilla/ports/cef/target/libembedding-e53e83ea1c6515b7.dylib"; sourceTree = "<group>"; };
 		6A8C76B71A0C06EE000925F5 /* MiniServo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniServo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A8C76BA1A0C06EE000925F5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6A8C76BD1A0C06EE000925F5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -388,7 +386,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A8C76BB1A0C06EE000925F5 /* Cocoa.framework in Frameworks */,
-				6A3FAA691A1EF9AC001BC19E /* libembedding-e53e83ea1c6515b7.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,7 +669,6 @@
 		6A8C76B91A0C06EE000925F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6A3FAA681A1EF9AC001BC19E /* libembedding-e53e83ea1c6515b7.dylib */,
 				6A8C76BA1A0C06EE000925F5 /* Cocoa.framework */,
 				6A8C76D91A0C06EE000925F5 /* XCTest.framework */,
 				6A8C76BC1A0C06EE000925F5 /* Other Frameworks */,
@@ -1101,9 +1097,10 @@
 					cef3,
 				);
 				INFOPLIST_FILE = "MiniServo/MiniServo-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/pcwalton/Source/servo/mozilla/ports/cef/target,
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1128,9 +1125,10 @@
 					cef3,
 				);
 				INFOPLIST_FILE = "MiniServo/MiniServo-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/pcwalton/Source/servo/mozilla/ports/cef/target,
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
