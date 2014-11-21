@@ -33,7 +33,6 @@
     rect.x = rect.y = 0;
     rect.width = backingFrame.size.width;
     rect.height = backingFrame.size.height;
-    NSLog(@"backing frame width %d, frame width %d", (int)backingFrame.size.width, (int)[mView frame].size.width);
     return true;
 }
 
