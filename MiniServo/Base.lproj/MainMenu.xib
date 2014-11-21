@@ -15,7 +15,7 @@
         <customObject id="Voe-Tx-rLC" customClass="MSAppDelegate">
             <connections>
                 <outlet property="backForwardButton" destination="ujA-Th-KoY" id="5LG-QC-Xkl"/>
-                <outlet property="browserView" destination="HNl-cX-qrh" id="L3d-AO-f09"/>
+                <outlet property="browserView" destination="DDi-Of-YYD" id="bth-NI-NzF"/>
                 <outlet property="stopReloadButton" destination="0Al-l4-ZH0" id="XCK-FU-zT7"/>
                 <outlet property="urlBar" destination="jP8-vH-xB8" id="cvt-Aw-Uwc"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
@@ -385,22 +385,29 @@
                             <action selector="stopOrReload:" target="Voe-Tx-rLC" id="eHJ-jN-BD7"/>
                         </connections>
                     </button>
-                    <openGLView ambiguous="YES" misplaced="YES" useAuxiliaryDepthBufferStencil="NO" useDoubleBufferingEnabled="YES" allowOffline="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HNl-cX-qrh" customClass="MSView">
-                        <rect key="frame" x="0.0" y="0.0" width="960" height="717"/>
+                    <box autoresizesSubviews="NO" verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="ycB-8o-Hnd">
+                        <rect key="frame" x="0.0" y="714" width="960" height="5"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    </openGLView>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
+                    <customView ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DDi-Of-YYD" customClass="MSView">
+                        <rect key="frame" x="0.0" y="0.0" width="960" height="716"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    </customView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="ujA-Th-KoY" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="5" id="1S3-iE-SHL"/>
+                    <constraint firstAttribute="trailing" secondItem="DDi-Of-YYD" secondAttribute="trailing" id="9FT-eZ-Q07"/>
                     <constraint firstItem="ujA-Th-KoY" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="7" id="AJJ-rl-x0p"/>
                     <constraint firstAttribute="trailing" secondItem="0Al-l4-ZH0" secondAttribute="trailing" constant="11" id="FOW-vs-vwD"/>
+                    <constraint firstItem="DDi-Of-YYD" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="Nt3-oB-7E0"/>
                     <constraint firstAttribute="trailing" secondItem="jP8-vH-xB8" secondAttribute="trailing" constant="7" id="V64-ax-apb"/>
-                    <constraint firstItem="HNl-cX-qrh" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="a1S-xY-vLH"/>
-                    <constraint firstAttribute="bottom" secondItem="HNl-cX-qrh" secondAttribute="bottom" id="a8X-2M-PFB"/>
+                    <constraint firstAttribute="bottom" secondItem="DDi-Of-YYD" secondAttribute="bottom" id="YYh-U1-2yu"/>
                     <constraint firstItem="jP8-vH-xB8" firstAttribute="leading" secondItem="ujA-Th-KoY" secondAttribute="trailing" constant="2" id="foO-ve-BzA"/>
-                    <constraint firstAttribute="trailing" secondItem="HNl-cX-qrh" secondAttribute="trailing" id="jhs-m4-pd8"/>
-                    <constraint firstItem="HNl-cX-qrh" firstAttribute="top" secondItem="0Al-l4-ZH0" secondAttribute="bottom" id="kZ0-AJ-zNn"/>
                     <constraint firstItem="jP8-vH-xB8" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="5" id="o3n-3O-rlz"/>
+                    <constraint firstItem="DDi-Of-YYD" firstAttribute="top" secondItem="0Al-l4-ZH0" secondAttribute="bottom" constant="1" id="rd8-di-6lv"/>
                 </constraints>
             </view>
         </window>

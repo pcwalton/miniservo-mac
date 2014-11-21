@@ -27,6 +27,16 @@
     return true;
 }
 
+/* virtual override */ bool MSCEFClient::GetBackingRect(CefRefPtr<CefBrowser> browser, CefRect& rect)
+{
+    NSRect backingFrame = [mView convertRectToBacking: [mView frame]];
+    rect.x = rect.y = 0;
+    rect.width = backingFrame.size.width;
+    rect.height = backingFrame.size.height;
+    NSLog(@"backing frame width %d, frame width %d", (int)backingFrame.size.width, (int)[mView frame].size.width);
+    return true;
+}
+
 /* virtual override */ void MSCEFClient::OnPaint(CefRefPtr<CefBrowser> browser,
                                                  CefRenderHandler::PaintElementType type,
                                                  const CefRenderHandler::RectList& dirtyRects,
@@ -35,6 +45,11 @@
                                                  int height)
 {
     [mView paint: buffer withSize: NSMakeSize(width, height)];
+}
+
+/* virtual override */ void MSCEFClient::OnPresent(CefRefPtr<CefBrowser> browser)
+{
+    [mView present];
 }
 
 /* virtual override */ void MSCEFClient::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,

@@ -31,8 +31,13 @@ class MSCEFClient;
 
 - (IBAction)goBackOrForward:(id)sender;
 - (IBAction)stopOrReload:(id)sender;
+- (void)spinCEFEventLoop:(id)nothing;
 - (void)windowDidResize:(NSNotification*)notification;
 - (void)sendCEFMouseEventForButton:(int)button up:(BOOL)up point:(NSPoint)point;
+- (void)sendCEFScrollEventWithDelta:(NSPoint)delta origin:(NSPoint)origin;
+- (void)sendCEFKeyboardEventForKey:(short)keyCode character:(char16)character;
 - (void)setCanGoBack:(BOOL)canGoBack forward:(BOOL)canGoForward;
+- (void)composite;
+- (void)initializeCompositing;
 
 @end

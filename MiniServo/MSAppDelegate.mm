@@ -41,7 +41,9 @@
     windowInfo.SetAsWindowless([self browserView], false);
     CefBrowserSettings browserSettings;
     mBrowser = CefBrowserHost::CreateBrowserSync(windowInfo, mCEFClient, INITIAL_URL, browserSettings, nullptr);
-    
+
+    [self.browserView initializeCompositing];
+
     [NSEvent addLocalMonitorForEventsMatchingMask:NSAnyEventMask handler:^(NSEvent* event){
         [self performSelectorOnMainThread: @selector(spinCEFEventLoop:) withObject: nil waitUntilDone: false];
         return event;
@@ -50,16 +52,10 @@
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-    // Avoid a nasty shutdown crash in a C++ destructor. Lovely!
-    _exit(0);
 }
      
 - (void)spinCEFEventLoop:(id) nothing {
-    if (mDoingWork)
-        return;
-    mDoingWork = YES;
     CefDoMessageLoopWork();
-    mDoingWork = NO;
 }
 
 - (IBAction)goBackOrForward:(id)sender {
@@ -96,6 +92,9 @@
 }
 
 - (void)windowDidResize:(NSNotification*)notification {
+    if (mBrowser == nullptr)
+        return;
+    [self.browserView updateGLContext];
     mBrowser->GetHost()->WasResized();
     mBrowser->GetHost()->Invalidate(PET_VIEW);
 }
@@ -106,6 +105,27 @@
     cCefMouseEvent.y = point.y;
     CefMouseEvent cefMouseEvent(cCefMouseEvent);
     mBrowser->GetHost()->SendMouseClickEvent(cefMouseEvent, MBT_LEFT, up, 1);
+}
+
+- (void)sendCEFScrollEventWithDelta:(NSPoint)delta origin:(NSPoint)origin {
+    cef_mouse_event_t cCefMouseEvent;
+    cCefMouseEvent.x = origin.x;
+    cCefMouseEvent.y = origin.y;
+    CefMouseEvent cefMouseEvent(cCefMouseEvent);
+    mBrowser->GetHost()->SendMouseWheelEvent(cefMouseEvent, delta.x, delta.y);
+}
+
+- (void)sendCEFKeyboardEventForKey:(short)keyCode character:(char16)character {
+    cef_key_event_t cCefKeyEvent;
+    cCefKeyEvent.type = KEYEVENT_RAWKEYDOWN;
+    cCefKeyEvent.character = character;
+    cCefKeyEvent.modifiers = 0;
+    cCefKeyEvent.windows_key_code = keyCode;    // FIXME(pcwalton)
+    cCefKeyEvent.native_key_code = keyCode;
+    cCefKeyEvent.is_system_key = false;
+    cCefKeyEvent.focus_on_editable_field = false;
+    CefKeyEvent keyEvent(cCefKeyEvent);
+    mBrowser->GetHost()->SendKeyEvent(keyEvent);
 }
 
 - (void)setCanGoBack:(BOOL)canGoBack forward:(BOOL)canGoForward {
@@ -121,9 +141,18 @@
         CefString url = mBrowser->GetMainFrame()->GetURL();
         NSString *nsURL = [[NSString alloc] initWithBytes:url.c_str()
                                                    length:url.length() * 2
-                                                 encoding:NSUTF16StringEncoding];
+                                                 encoding:NSUTF16LittleEndianStringEncoding];
         [self.urlBar setStringValue: nsURL];
     }
+}
+
+- (void)composite {
+    mBrowser->GetHost()->Composite();
+}
+
+- (void)initializeCompositing {
+    mBrowser->GetHost()->WasResized();
+    mBrowser->GetHost()->InitializeCompositing();
 }
 
 @end

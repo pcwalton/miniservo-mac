@@ -7,20 +7,22 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <IOSurface/IOSurface.h>
 #include <OpenGL/gl.h>
 #include <include/cef_client.h>
 #import "MSAppDelegate.h"
 
 class MSCEFClient;
 
-@interface MSView : NSOpenGLView {
-    IOSurfaceRef surface;
-    GLuint texture;
+@interface MSView : NSView {
     MSAppDelegate* appDelegate;
+    NSOpenGLContext *glContext;
 }
 
+-(id)initWithFrame:(NSRect)frame;
+-(void)initializeCompositing;
 -(void)setAppDelegate:(MSAppDelegate*)newDelegate;
 -(void)paint:(const void*)buffer withSize:(NSSize)size;
+-(void)present;
+-(void)updateGLContext;
 
 @end

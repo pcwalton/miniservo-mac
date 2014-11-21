@@ -33,12 +33,14 @@ public:
                         
     // CefRenderHandler implementation
     virtual bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect) override;
+    virtual bool GetBackingRect(CefRefPtr<CefBrowser> browser, CefRect& rect) override;
     virtual void OnPaint(CefRefPtr<CefBrowser> browser,
                          CefRenderHandler::PaintElementType type,
                          const CefRenderHandler::RectList& dirtyRects,
                          const void* buffer,
                          int width,
                          int height) override;
+    virtual void OnPresent(CefRefPtr<CefBrowser> browser) override;
 
 private:
     IMPLEMENT_REFCOUNTING(MSCEFClient);

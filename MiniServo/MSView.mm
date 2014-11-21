@@ -8,7 +8,10 @@
 
 #import "MSAppDelegate.h"
 #import "MSView.h"
+
+#include <CoreServices/CoreServices.h>
 #include <OpenGL/gl.h>
+#include <mach/mach_time.h>
 
 @implementation MSView
 
@@ -19,93 +22,53 @@
         return nil;
     
     appDelegate = nil;
-    surface = nil;
-    texture = 0;
+    glContext = nil;
+
+    [self setWantsBestResolutionOpenGLSurface:YES];
     
     return self;
 }
 
-- (void)drawRect:(NSRect)dirtyRect
+- (void)initializeCompositing
 {
-    [super drawRect:dirtyRect];
-    
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    glViewport(0, 0, [self frame].size.width, [self frame].size.height);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_TEXTURE_RECTANGLE_ARB);
-    
-    if (texture != 0)
-        glBindTexture(GL_TEXTURE_RECTANGLE_ARB, texture);
-    
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0, [self frame].size.height);
-    glVertex3f(-1.0, -1.0, 0.0);
-    glTexCoord2f([self frame].size.width, [self frame].size.height);
-    glVertex3f(1.0, -1.0, 0.0);
-    glTexCoord2f([self frame].size.width, 0);
-    glVertex3f(1.0, 1.0, 0.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(-1.0, 1.0, 0.0);
-    glEnd();
-    
-    if (texture != 0)
-        glBindTexture(GL_TEXTURE_2D, 0);
-    
-    glFlush();
-    
-    [[self openGLContext] flushBuffer];
+    NSOpenGLPixelFormatAttribute pixelFormatAttributes[] = {
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFAAccelerated,
+        NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
+        (NSOpenGLPixelFormatAttribute)0
+    };
+    NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc]
+                                        initWithAttributes:pixelFormatAttributes];
+    if (pixelFormat == nil) {
+        fprintf(stderr, "couldn't choose a pixel format!\n");
+        abort();
+    }
+    CGLContextObj cglContext;
+    CGLCreateContext((CGLPixelFormatObj)[pixelFormat CGLPixelFormatObj], nullptr, &cglContext);
+    CGLSetCurrentContext(cglContext);
+    GLint swapInterval = 1;
+    CGLSetParameter(cglContext, kCGLCPSwapInterval, &swapInterval);
+    glContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext];
+    [glContext setView: self];
+
+    [appDelegate initializeCompositing];
 }
 
 -(void)paint:(const void*)buffer withSize:(NSSize)size {
-    if (surface == nil ||
-            IOSurfaceGetWidth(surface) != size.width ||
-            IOSurfaceGetHeight(surface) != size.height) {
-        if (surface != nil) {
-            CFRelease(surface);
-            surface = nil;
-        }
-        surface = IOSurfaceCreate((__bridge CFDictionaryRef)
-                                  ([NSDictionary dictionaryWithObjectsAndKeys:
-                                   [NSNumber numberWithInt: size.width], kIOSurfaceWidth,
-                                   [NSNumber numberWithInt: size.height], kIOSurfaceHeight,
-                                   [NSNumber numberWithInt: size.width * 4], kIOSurfaceBytesPerRow,
-                                   [NSNumber numberWithInt: 4], kIOSurfaceBytesPerElement,
-                                   nil]));
-    }
-    if (IOSurfaceLock(surface, 0, NULL) != kIOReturnSuccess) {
-        NSLog(@"failed to lock I/O surface");
-        return;
-    }
-    memcpy(IOSurfaceGetBaseAddress(surface), buffer, (int)size.width * (int)size.height * 4);
-    IOSurfaceUnlock(surface, 0, NULL);
-    
-    [[self openGLContext] makeCurrentContext];
-    
-    if (texture != 0) {
-        glDeleteTextures(1, &texture);
-        texture = 0;
-    }
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_RECTANGLE_ARB, texture);
-    CGLError cglError = CGLTexImageIOSurface2D((CGLContextObj)[[self openGLContext] CGLContextObj],
-                                               GL_TEXTURE_RECTANGLE_ARB,
-                                               GL_RGBA,
-                                               size.width,
-                                               size.height,
-                                               GL_BGRA,
-                                               GL_UNSIGNED_INT_8_8_8_8_REV,
-                                               surface,
-                                               0);
-    if (cglError != kCGLNoError)
-        NSLog(@"failed to upload!");
-    
-    [self setNeedsDisplay: YES];
+    [glContext makeCurrentContext];
+}
+
+-(void)present {
+    [glContext flushBuffer];
+    [NSOpenGLContext clearCurrentContext];
 }
 
 - (void)setAppDelegate:(MSAppDelegate *)newDelegate {
     appDelegate = newDelegate;
+}
+
+- (void)updateGLContext {
+    [glContext update];
 }
 
 - (void)handleMouseEvent:(NSEvent*)event {
@@ -125,6 +88,7 @@
 
     NSPoint point = [self convertPoint: [event locationInWindow] fromView:nil];
     point.y = [self frame].size.height - point.y;
+    point = [self convertPointToBacking: point];
     [appDelegate sendCEFMouseEventForButton: button up: up point: point];
 }
 
@@ -134,6 +98,38 @@
 
 - (void)mouseUp:(NSEvent*)event {
     [self handleMouseEvent: event];
+}
+
+- (void)keyDown:(NSEvent*)event {
+    NSString *characters = [event characters];
+    char16 character = 0;
+    if ([characters length] > 0)
+        character = [characters characterAtIndex:0];
+    [appDelegate sendCEFKeyboardEventForKey: [event keyCode] character: character];
+}
+
+- (void)scrollWheel:(NSEvent*)event {
+    // Code for precise scrolling referenced from GLFW.
+    NSPoint delta;
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6) {
+        delta = NSMakePoint([event scrollingDeltaX], [event scrollingDeltaY]);
+        if ([event hasPreciseScrollingDeltas]) {
+            delta.x *= 0.1;
+            delta.y *= 0.1;
+        }
+    } else {
+        delta = NSMakePoint([event deltaX], [event deltaY]);
+    }
+    
+    if (fabs(delta.x) <= 0.0 && fabs(delta.y) <= 0.0)
+        return;
+    
+    delta.x *= 30.0;
+    delta.y *= 30.0;
+    
+    NSPoint origin = [self convertPoint: [event locationInWindow] fromView:nil];
+    origin.y = [self frame].size.height - origin.y;
+    [appDelegate sendCEFScrollEventWithDelta:delta origin:origin];
 }
 
 - (BOOL)acceptsFirstResponder {
