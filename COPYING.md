@@ -1,0 +1,1 @@
+MiniServo is licensed under the same terms as Servo itself, with the exception of the art assets from Firefox (mozilla-central), which are licensed under the same terms as Firefox itself.
