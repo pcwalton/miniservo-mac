@@ -151,14 +151,49 @@
 {
     if ([[[notification userInfo] objectForKey:@"NSTextMovement"] intValue] != NSReturnTextMovement)
         return;
-    if ([[self.urlBar stringValue] length] == 0)
+    
+    NSString *string = [self.urlBar stringValue];
+    if ([string length] == 0)
         return;
-    CefString url([[self.urlBar stringValue] UTF8String]);
+    NSURL *url = [NSURL URLWithString:string];
+    if ([url scheme] == nil) {
+        string = [@"http://" stringByAppendingString:string];
+        url = [NSURL URLWithString:string];
+    }
+
+    NSDictionary *dimmedAttributes = [NSDictionary
+                                      dictionaryWithObjectsAndKeys:
+                                      [NSColor disabledControlTextColor],
+                                      NSForegroundColorAttributeName,
+                                      [NSFont systemFontOfSize:12.0],
+                                      NSFontAttributeName,
+                                      nil];
+    NSDictionary *darkAttributes = [NSDictionary
+                                    dictionaryWithObjectsAndKeys:
+                                    [NSColor controlTextColor],
+                                    NSForegroundColorAttributeName,
+                                    [NSFont systemFontOfSize:12.0],
+                                    NSFontAttributeName,
+                                    nil];
+    NSMutableAttributedString *formattedURL = [[NSMutableAttributedString alloc] init];
+    [formattedURL appendAttributedString:
+     [[NSAttributedString alloc] initWithString:[[url scheme] stringByAppendingString:@"://"]
+                                     attributes:dimmedAttributes]];
+    // TODO(pcwalton): username, password, port
+    [formattedURL appendAttributedString:
+     [[NSAttributedString alloc] initWithString:[url host]
+                                     attributes:darkAttributes]];
+    [formattedURL appendAttributedString:
+     [[NSAttributedString alloc] initWithString:[url path]
+                                     attributes:dimmedAttributes]];
+    [self.urlBar setAttributedStringValue: formattedURL];
+    
+    CefString cefString([string UTF8String]);
     if (mBrowser == nullptr)
         return;
     if (mBrowser->GetMainFrame() == nullptr)
         return;
-    mBrowser->GetMainFrame()->LoadURL(url);
+    mBrowser->GetMainFrame()->LoadURL(cefString);
 }
 
 - (void)windowDidResize:(NSNotification*)notification {
