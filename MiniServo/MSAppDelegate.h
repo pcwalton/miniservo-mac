@@ -7,8 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <MMTabBarView/MMTabBarView.h>
 #include <include/cef_app.h>
 #include <include/cef_base.h>
+#import "INAppStoreWindow.h"
 
 #define INITIAL_URL "http://asdf.com/"
 
@@ -23,14 +25,19 @@ class MSCEFClient;
     BOOL mDoingWork;
 }
 
-@property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet INAppStoreWindow *window;
 @property (assign) IBOutlet NSSegmentedControl *backForwardButton;
 @property (assign) IBOutlet NSButton *stopReloadButton;
 @property (assign) IBOutlet NSTextField *urlBar;
 @property (assign) IBOutlet MSView *browserView;
+@property (assign) IBOutlet MMTabBarView *tabBar;
+@property (assign) IBOutlet NSTabView *tabView;
+@property (assign) IBOutlet NSView *titleBarView;
 
 - (IBAction)changeFrameworkPath:(id)sender;
 - (IBAction)goBackOrForward:(id)sender;
+- (IBAction)goBack:(id)sender;
+- (IBAction)goForward:(id)sender;
 - (IBAction)stopOrReload:(id)sender;
 - (NSString *)promptForNewFrameworkPath;
 - (void)spinCEFEventLoop:(id)nothing;

@@ -8,6 +8,7 @@
 
 #import "MSAppDelegate.h"
 #import "MSCEFClient.h"
+#import "MSTabStyle.h"
 #import "MSView.h"
 #include <include/cef_app.h>
 #include <include/cef_base.h>
@@ -47,6 +48,20 @@
     [self.window setDelegate:self];
     [self.browserView setAppDelegate:self];
     [self.urlBar setDelegate:self];
+
+    self.window.titleBarView = self.titleBarView;
+    self.window.centerTrafficLightButtons = NO;
+    self.window.centerFullScreenButton = NO;
+    self.window.trafficLightButtonsLeftMargin =
+        self.window.trafficLightButtonsTopMargin =
+        self.window.fullScreenButtonRightMargin =
+        self.window.fullScreenButtonTopMargin = 14.0;
+    [self.window setTitleBarHeight: [self.titleBarView frame].size.height + 20.0];
+    [self.tabBar setButtonMaxWidth:9999];
+    [self.tabBar setButtonOptimumWidth:9999];
+    [self.tabBar setShowAddTabButton:YES];
+    [self.tabBar setAutomaticallyAnimates:YES];
+    [self.tabBar setStyle: [[MSTabStyle alloc] init]];
 
     while (true) {
         NSString *frameworkPath =
@@ -109,12 +124,20 @@
     NSSegmentedControl* control = (NSSegmentedControl*)sender;
     switch ([control selectedSegment]) {
     case BACK_SEGMENT:
-        mBrowser->GoBack();
+        [self goBack:sender];
         break;
     case FORWARD_SEGMENT:
-        mBrowser->GoForward();
+        [self goForward:sender];
         break;
     }
+}
+
+- (IBAction)goBack:(id)sender {
+    mBrowser->GoBack();
+}
+
+- (IBAction)goForward:(id)sender {
+    mBrowser->GoForward();
 }
 
 - (IBAction)stopOrReload:(id)sender {
@@ -191,10 +214,6 @@
                                                  encoding:NSUTF16LittleEndianStringEncoding];
         [self.urlBar setStringValue: nsURL];
     }
-}
-
-- (void)composite {
-    mBrowser->GetHost()->Composite();
 }
 
 - (void)initializeCompositing {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1080" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
@@ -15,8 +15,11 @@
         <customObject id="Voe-Tx-rLC" customClass="MSAppDelegate">
             <connections>
                 <outlet property="backForwardButton" destination="ujA-Th-KoY" id="5LG-QC-Xkl"/>
-                <outlet property="browserView" destination="DDi-Of-YYD" id="bth-NI-NzF"/>
+                <outlet property="browserView" destination="WqN-0U-Ydg" id="nri-bq-dVt"/>
                 <outlet property="stopReloadButton" destination="0Al-l4-ZH0" id="XCK-FU-zT7"/>
+                <outlet property="tabBar" destination="FpV-uP-3Md" id="7dB-ka-6js"/>
+                <outlet property="tabView" destination="dxc-LB-XAk" id="E1r-oN-1jB"/>
+                <outlet property="titleBarView" destination="VVc-Cg-chP" id="Ac3-fu-gvu"/>
                 <outlet property="urlBar" destination="jP8-vH-xB8" id="cvt-Aw-Uwc"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -303,6 +306,23 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="History" id="rFE-1G-h5e">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="History" id="lVg-9m-Pbm">
+                        <items>
+                            <menuItem title="Back" keyEquivalent="[" id="rYz-EK-DBY">
+                                <connections>
+                                    <action selector="goBack:" target="Voe-Tx-rLC" id="sUn-gM-mja"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Forward" keyEquivalent="]" id="5uy-WB-E3B">
+                                <connections>
+                                    <action selector="goForward:" target="Voe-Tx-rLC" id="Pcu-Db-lEe"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Window" id="aUF-d1-5bR">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
@@ -342,7 +362,7 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="MiniServo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="INAppStoreWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <rect key="contentRect" x="335" y="390" width="960" height="750"/>
@@ -351,67 +371,33 @@
                 <rect key="frame" x="0.0" y="0.0" width="960" height="750"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ujA-Th-KoY">
-                        <rect key="frame" x="7" y="721" width="68" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <segmentedCell key="cell" alignment="left" style="texturedRounded" trackingMode="momentary" id="y8N-Uy-e0u">
-                            <font key="font" size="13" name="AppleGothic"/>
-                            <segments>
-                                <segment label="◀"/>
-                                <segment label="▶" tag="1"/>
-                            </segments>
-                            <connections>
-                                <action selector="goBackOrForward:" target="Voe-Tx-rLC" id="IoE-zf-wsO"/>
-                            </connections>
-                        </segmentedCell>
-                    </segmentedControl>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jP8-vH-xB8">
-                        <rect key="frame" x="77" y="724" width="876" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Search or enter address" drawsBackground="YES" id="ZwR-8Z-Udv">
-                            <font key="font" metaFont="cellTitle"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
+                    <tabView type="noTabsNoBorder" id="dxc-LB-XAk">
+                        <rect key="frame" x="-8" y="-8" width="976" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <tabViewItems>
+                            <tabViewItem label="Servo" identifier="1" id="eWn-Yv-e44">
+                                <view key="view" id="90w-z6-UkM">
+                                    <rect key="frame" x="0.0" y="0.0" width="976" height="736"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <customView id="WqN-0U-Ydg" customClass="MSView">
+                                            <rect key="frame" x="8" y="7" width="960" height="729"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </customView>
+                                    </subviews>
+                                </view>
+                            </tabViewItem>
+                        </tabViewItems>
+                    </tabView>
+                    <customView id="FpV-uP-3Md" customClass="MMTabBarView">
+                        <rect key="frame" x="0.0" y="728" width="960" height="22"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <connections>
-                            <action selector="navigateToURL:" target="Voe-Tx-rLC" id="TSS-yL-jpu"/>
+                            <outlet property="tabView" destination="dxc-LB-XAk" id="5Pt-c2-X4g"/>
                         </connections>
-                    </textField>
-                    <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Al-l4-ZH0">
-                        <rect key="frame" x="928" y="717" width="21" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="bevel" title="⟲" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="MPe-oJ-ZAt">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="24" name="AppleSymbols"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="stopOrReload:" target="Voe-Tx-rLC" id="eHJ-jN-BD7"/>
-                        </connections>
-                    </button>
-                    <box autoresizesSubviews="NO" verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="ycB-8o-Hnd">
-                        <rect key="frame" x="0.0" y="714" width="960" height="5"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <font key="titleFont" metaFont="system"/>
-                    </box>
-                    <customView ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DDi-Of-YYD" customClass="MSView">
-                        <rect key="frame" x="0.0" y="0.0" width="960" height="716"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </customView>
                 </subviews>
-                <constraints>
-                    <constraint firstItem="ujA-Th-KoY" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="5" id="1S3-iE-SHL"/>
-                    <constraint firstAttribute="trailing" secondItem="DDi-Of-YYD" secondAttribute="trailing" id="9FT-eZ-Q07"/>
-                    <constraint firstItem="ujA-Th-KoY" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="7" id="AJJ-rl-x0p"/>
-                    <constraint firstAttribute="trailing" secondItem="0Al-l4-ZH0" secondAttribute="trailing" constant="11" id="FOW-vs-vwD"/>
-                    <constraint firstItem="DDi-Of-YYD" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="Nt3-oB-7E0"/>
-                    <constraint firstAttribute="trailing" secondItem="jP8-vH-xB8" secondAttribute="trailing" constant="7" id="V64-ax-apb"/>
-                    <constraint firstAttribute="bottom" secondItem="DDi-Of-YYD" secondAttribute="bottom" id="YYh-U1-2yu"/>
-                    <constraint firstItem="jP8-vH-xB8" firstAttribute="leading" secondItem="ujA-Th-KoY" secondAttribute="trailing" constant="2" id="foO-ve-BzA"/>
-                    <constraint firstItem="jP8-vH-xB8" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="5" id="o3n-3O-rlz"/>
-                    <constraint firstItem="DDi-Of-YYD" firstAttribute="top" secondItem="0Al-l4-ZH0" secondAttribute="bottom" constant="1" id="rd8-di-6lv"/>
-                </constraints>
             </view>
         </window>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="8Al-QU-20c">
@@ -424,7 +410,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="479" height="95"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZbM-wZ-0rS">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ZbM-wZ-0rS">
                         <rect key="frame" x="17" y="58" width="189" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of Servo framework:" id="Saw-4a-fXM">
@@ -433,7 +419,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X1p-rC-9R3">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="X1p-rC-9R3">
                         <rect key="frame" x="208" y="18" width="254" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="You will need to restart MiniServo for changes to this location to take effect." id="0Bw-nt-ksx">
@@ -442,7 +428,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wO1-0Z-Vcu">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" id="wO1-0Z-Vcu">
                         <rect key="frame" x="208" y="58" width="167" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingHead" sendsActionOnEndEditing="YES" title="/Source/servo/framework" id="XSV-No-dbB">
@@ -454,12 +440,9 @@
                             <binding destination="nYE-RQ-Ymh" name="value" keyPath="values.ServoFrameworkPath" id="BCP-3c-eai"/>
                         </connections>
                     </textField>
-                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g4n-Kq-YBO">
+                    <button verticalHuggingPriority="750" id="g4n-Kq-YBO">
                         <rect key="frame" x="374" y="48" width="101" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="89" id="dzB-Ka-Bg6"/>
-                        </constraints>
                         <buttonCell key="cell" type="push" title="Change…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gld-vf-nSh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -469,16 +452,73 @@
                         </connections>
                     </button>
                 </subviews>
-                <constraints>
-                    <constraint firstAttribute="trailing" secondItem="g4n-Kq-YBO" secondAttribute="trailing" constant="20" id="N0V-iW-X91"/>
-                    <constraint firstItem="ZbM-wZ-0rS" firstAttribute="leading" secondItem="OtV-pI-5Q9" secondAttribute="leading" constant="20" id="h6p-Cr-vcv"/>
-                    <constraint firstItem="g4n-Kq-YBO" firstAttribute="leading" secondItem="wO1-0Z-Vcu" secondAttribute="trailing" constant="8" id="i0y-Qh-d2Z"/>
-                    <constraint firstItem="wO1-0Z-Vcu" firstAttribute="leading" secondItem="ZbM-wZ-0rS" secondAttribute="trailing" constant="8" id="p4f-YM-dvg"/>
-                    <constraint firstItem="X1p-rC-9R3" firstAttribute="leading" secondItem="OtV-pI-5Q9" secondAttribute="leading" constant="211" id="q1x-Rb-vqf"/>
-                    <constraint firstAttribute="trailing" secondItem="X1p-rC-9R3" secondAttribute="trailing" constant="20" id="x2a-aP-PpG"/>
-                </constraints>
             </view>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="nYE-RQ-Ymh"/>
+        <customView id="VVc-Cg-chP">
+            <rect key="frame" x="0.0" y="0.0" width="512" height="43"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <segmentedControl verticalHuggingPriority="750" id="ujA-Th-KoY">
+                    <rect key="frame" x="80" y="8" width="55" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <segmentedCell key="cell" alignment="left" style="texturedRounded" trackingMode="momentary" id="y8N-Uy-e0u">
+                        <font key="font" size="13" name="AppleGothic"/>
+                        <segments>
+                            <segment image="BackIcon" width="24">
+                                <nil key="label"/>
+                            </segment>
+                            <segment image="ForwardIcon" width="24" tag="1">
+                                <nil key="label"/>
+                            </segment>
+                        </segments>
+                        <connections>
+                            <action selector="goBackOrForward:" target="Voe-Tx-rLC" id="IoE-zf-wsO"/>
+                        </connections>
+                    </segmentedCell>
+                </segmentedControl>
+                <customView id="Zuc-H2-eT7" customClass="MSURLView">
+                    <rect key="frame" x="142" y="9" width="327" height="24"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="bDM-eN-lDz">
+                            <rect key="frame" x="5" y="4" width="16" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="GenericIdentityIcon" id="2ot-HI-IIc"/>
+                        </imageView>
+                        <button id="0Al-l4-ZH0">
+                            <rect key="frame" x="305" y="1" width="21" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ReloadIcon" imagePosition="overlaps" alignment="center" alternateImage="ReloadLitIcon" imageScaling="proportionallyDown" inset="2" id="MPe-oJ-ZAt">
+                                <behavior key="behavior" lightByContents="YES"/>
+                                <font key="font" size="24" name="AppleSymbols"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="stopOrReload:" target="Voe-Tx-rLC" id="eHJ-jN-BD7"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </customView>
+                <textField focusRingType="none" verticalHuggingPriority="750" id="jP8-vH-xB8">
+                    <rect key="frame" x="165" y="11" width="284" height="18"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Search or enter address" id="ZwR-8Z-Udv">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="navigateToURL:" target="Voe-Tx-rLC" id="TSS-yL-jpu"/>
+                    </connections>
+                </textField>
+            </subviews>
+        </customView>
     </objects>
+    <resources>
+        <image name="BackIcon" width="18" height="18"/>
+        <image name="ForwardIcon" width="18" height="18"/>
+        <image name="GenericIdentityIcon" width="16" height="16"/>
+        <image name="ReloadIcon" width="14" height="14"/>
+        <image name="ReloadLitIcon" width="14" height="14"/>
+    </resources>
 </document>

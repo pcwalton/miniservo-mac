@@ -1,0 +1,6 @@
+[submodule "MMTabBarView"]
+	path = MMTabBarView
+	url = https://github.com/MiMo42/MMTabBarView.git
+[submodule "INAppStoreWindow"]
+	path = INAppStoreWindow
+	url = https://github.com/indragiek/INAppStoreWindow.git

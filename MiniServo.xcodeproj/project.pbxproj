@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A07EBE21A20700D000D3ED9 /* MSURLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A07EBE11A20700D000D3ED9 /* MSURLView.m */; };
 		6A1EAB841A1FE3B6005D6A3E /* cef_atomicops_x86_gcc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EAAC11A1FE3B6005D6A3E /* cef_atomicops_x86_gcc.cc */; };
 		6A1EAB851A1FE3B6005D6A3E /* cef_bind_helpers.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EAAC21A1FE3B6005D6A3E /* cef_bind_helpers.cc */; };
 		6A1EAB861A1FE3B6005D6A3E /* cef_callback_helpers.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EAAC31A1FE3B6005D6A3E /* cef_callback_helpers.cc */; };
@@ -131,6 +132,14 @@
 		6A8C76F01A0C2C83000925F5 /* MSView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76EF1A0C2C83000925F5 /* MSView.mm */; };
 		6A8C76F21A0C2F97000925F5 /* MSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */; };
 		6A8C78251A0C40C6000925F5 /* MSCEFClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */; };
+		6ACF06061A25264500032FB9 /* MMTabBarView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ACF06031A2525F200032FB9 /* MMTabBarView.framework */; };
+		6ACF06071A25265E00032FB9 /* MMTabBarView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6ACF06031A2525F200032FB9 /* MMTabBarView.framework */; };
+		6ACF06161A2545D000032FB9 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06131A2545D000032FB9 /* INAppStoreWindow.m */; };
+		6ACF06171A2545D000032FB9 /* INWindowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06151A2545D000032FB9 /* INWindowButton.m */; };
+		6ACF061F1A2545E200032FB9 /* INAppStoreWindowSwizzling.c in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06191A2545E200032FB9 /* INAppStoreWindowSwizzling.c */; };
+		6ACF06201A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF061C1A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m */; };
+		6ACF06211A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF061E1A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m */; };
+		6ACF06251A2552B900032FB9 /* MSTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06241A2552B900032FB9 /* MSTabStyle.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +150,20 @@
 			remoteGlobalIDString = 6A8C76B61A0C06EE000925F5;
 			remoteInfo = MiniServo;
 		};
+		6ACF06021A2525F200032FB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06DB23A61609F5830071BDA0;
+			remoteInfo = MMTabBarView;
+		};
+		6ACF06041A25263000032FB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 06DB23A51609F5820071BDA0;
+			remoteInfo = MMTabBarView;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -150,12 +173,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6ACF06071A25265E00032FB9 /* MMTabBarView.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6A07EBE01A20700D000D3ED9 /* MSURLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSURLView.h; sourceTree = "<group>"; };
+		6A07EBE11A20700D000D3ED9 /* MSURLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSURLView.m; sourceTree = "<group>"; };
 		6A1EAAC11A1FE3B6005D6A3E /* cef_atomicops_x86_gcc.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_atomicops_x86_gcc.cc; sourceTree = "<group>"; };
 		6A1EAAC21A1FE3B6005D6A3E /* cef_bind_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_bind_helpers.cc; sourceTree = "<group>"; };
 		6A1EAAC31A1FE3B6005D6A3E /* cef_callback_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_callback_helpers.cc; sourceTree = "<group>"; };
@@ -378,6 +404,20 @@
 		6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSAppDelegate.mm; sourceTree = "<group>"; };
 		6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSCEFClient.mm; sourceTree = "<group>"; };
 		6A8C78241A0C40C6000925F5 /* MSCEFClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCEFClient.h; sourceTree = "<group>"; };
+		6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MMTabBarView.xcodeproj; path = MMTabBarView/MMTabBarView/MMTabBarView.xcodeproj; sourceTree = "<group>"; };
+		6ACF06121A2545D000032FB9 /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindow.h; path = INAppStoreWindow/INAppStoreWindow/INAppStoreWindow.h; sourceTree = SOURCE_ROOT; };
+		6ACF06131A2545D000032FB9 /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INAppStoreWindow.m; path = INAppStoreWindow/INAppStoreWindow/INAppStoreWindow.m; sourceTree = SOURCE_ROOT; };
+		6ACF06141A2545D000032FB9 /* INWindowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INWindowButton.h; path = INAppStoreWindow/INAppStoreWindow/INWindowButton.h; sourceTree = SOURCE_ROOT; };
+		6ACF06151A2545D000032FB9 /* INWindowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INWindowButton.m; path = INAppStoreWindow/INAppStoreWindow/INWindowButton.m; sourceTree = SOURCE_ROOT; };
+		6ACF06191A2545E200032FB9 /* INAppStoreWindowSwizzling.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = INAppStoreWindowSwizzling.c; path = INAppStoreWindow/INAppStoreWindow/Extensions/INAppStoreWindowSwizzling.c; sourceTree = SOURCE_ROOT; };
+		6ACF061A1A2545E200032FB9 /* INAppStoreWindowSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindowSwizzling.h; path = INAppStoreWindow/INAppStoreWindow/Extensions/INAppStoreWindowSwizzling.h; sourceTree = SOURCE_ROOT; };
+		6ACF061B1A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "INWindowBackgroundView+CoreUIRendering.h"; path = "INAppStoreWindow/INAppStoreWindow/Extensions/INWindowBackgroundView+CoreUIRendering.h"; sourceTree = SOURCE_ROOT; };
+		6ACF061C1A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "INWindowBackgroundView+CoreUIRendering.m"; path = "INAppStoreWindow/INAppStoreWindow/Extensions/INWindowBackgroundView+CoreUIRendering.m"; sourceTree = SOURCE_ROOT; };
+		6ACF061D1A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDocument+INAppStoreWindowFixes.h"; path = "INAppStoreWindow/INAppStoreWindow/Extensions/NSDocument+INAppStoreWindowFixes.h"; sourceTree = SOURCE_ROOT; };
+		6ACF061E1A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDocument+INAppStoreWindowFixes.m"; path = "INAppStoreWindow/INAppStoreWindow/Extensions/NSDocument+INAppStoreWindowFixes.m"; sourceTree = SOURCE_ROOT; };
+		6ACF06221A25465500032FB9 /* INAppStoreWindowCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindowCompatibility.h; path = INAppStoreWindow/INAppStoreWindow/INAppStoreWindowCompatibility.h; sourceTree = SOURCE_ROOT; };
+		6ACF06231A2552B900032FB9 /* MSTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTabStyle.h; sourceTree = "<group>"; };
+		6ACF06241A2552B900032FB9 /* MSTabStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTabStyle.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,6 +425,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6ACF06061A25264500032FB9 /* MMTabBarView.framework in Frameworks */,
 				6A8C76BB1A0C06EE000925F5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -650,6 +691,7 @@
 		6A8C76AE1A0C06EE000925F5 = {
 			isa = PBXGroup;
 			children = (
+				6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */,
 				6A8C76C01A0C06EE000925F5 /* MiniServo */,
 				6A8C76DE1A0C06EE000925F5 /* MiniServoTests */,
 				6A8C76B91A0C06EE000925F5 /* Frameworks */,
@@ -689,14 +731,19 @@
 		6A8C76C01A0C06EE000925F5 /* MiniServo */ = {
 			isa = PBXGroup;
 			children = (
+				6ACF06111A25459600032FB9 /* INAppStoreWindow */,
 				6A3FA6F11A1D6394001BC19E /* Servo Resources */,
 				6A8C76CC1A0C06EE000925F5 /* MSAppDelegate.h */,
 				6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */,
 				6A8C78241A0C40C6000925F5 /* MSCEFClient.h */,
 				6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */,
-				6A8C76CF1A0C06EE000925F5 /* MainMenu.xib */,
+				6ACF06231A2552B900032FB9 /* MSTabStyle.h */,
+				6ACF06241A2552B900032FB9 /* MSTabStyle.m */,
+				6A07EBE01A20700D000D3ED9 /* MSURLView.h */,
+				6A07EBE11A20700D000D3ED9 /* MSURLView.m */,
 				6A8C76EE1A0C2C83000925F5 /* MSView.h */,
 				6A8C76EF1A0C2C83000925F5 /* MSView.mm */,
+				6A8C76CF1A0C06EE000925F5 /* MainMenu.xib */,
 				6A1EAABF1A1FE3B6005D6A3E /* libcef_dll */,
 				6A8C76D21A0C06EE000925F5 /* Images.xcassets */,
 				6A8C76C11A0C06EE000925F5 /* Supporting Files */,
@@ -734,6 +781,40 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		6ACF05FF1A2525F200032FB9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6ACF06031A2525F200032FB9 /* MMTabBarView.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6ACF06111A25459600032FB9 /* INAppStoreWindow */ = {
+			isa = PBXGroup;
+			children = (
+				6ACF06181A2545D300032FB9 /* Extensions */,
+				6ACF06121A2545D000032FB9 /* INAppStoreWindow.h */,
+				6ACF06131A2545D000032FB9 /* INAppStoreWindow.m */,
+				6ACF06221A25465500032FB9 /* INAppStoreWindowCompatibility.h */,
+				6ACF06141A2545D000032FB9 /* INWindowButton.h */,
+				6ACF06151A2545D000032FB9 /* INWindowButton.m */,
+			);
+			name = INAppStoreWindow;
+			sourceTree = "<group>";
+		};
+		6ACF06181A2545D300032FB9 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6ACF06191A2545E200032FB9 /* INAppStoreWindowSwizzling.c */,
+				6ACF061A1A2545E200032FB9 /* INAppStoreWindowSwizzling.h */,
+				6ACF061B1A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.h */,
+				6ACF061C1A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m */,
+				6ACF061D1A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.h */,
+				6ACF061E1A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -749,6 +830,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6ACF06051A25263000032FB9 /* PBXTargetDependency */,
 			);
 			name = MiniServo;
 			productName = MiniServo;
@@ -781,7 +863,7 @@
 			attributes = {
 				CLASSPREFIX = MS;
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Patrick Walton";
+				ORGANIZATIONNAME = "Mozilla Corporation";
 				TargetAttributes = {
 					6A8C76D71A0C06EE000925F5 = {
 						TestTargetID = 6A8C76B61A0C06EE000925F5;
@@ -799,6 +881,12 @@
 			mainGroup = 6A8C76AE1A0C06EE000925F5;
 			productRefGroup = 6A8C76B81A0C06EE000925F5 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6ACF05FF1A2525F200032FB9 /* Products */;
+					ProjectRef = 6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				6A8C76B61A0C06EE000925F5 /* MiniServo */,
@@ -806,6 +894,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		6ACF06031A2525F200032FB9 /* MMTabBarView.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MMTabBarView.framework;
+			remoteRef = 6ACF06021A2525F200032FB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6A8C76B51A0C06EE000925F5 /* Resources */ = {
@@ -846,12 +944,14 @@
 				6A1EABB01A1FE3B6005D6A3E /* urlrequest_client_cpptoc.cc in Sources */,
 				6A1EAB981A1FE3B6005D6A3E /* display_handler_cpptoc.cc in Sources */,
 				6A1EAB8C1A1FE3B6005D6A3E /* cef_string16.cc in Sources */,
+				6ACF061F1A2545E200032FB9 /* INAppStoreWindowSwizzling.c in Sources */,
 				6A8C76F21A0C2F97000925F5 /* MSAppDelegate.mm in Sources */,
 				6A1EAB851A1FE3B6005D6A3E /* cef_bind_helpers.cc in Sources */,
 				6A1EAB8A1A1FE3B6005D6A3E /* cef_logging.cc in Sources */,
 				6A1EABBC1A1FE3B6005D6A3E /* callback_ctocpp.cc in Sources */,
 				6A1EAB9A1A1FE3B6005D6A3E /* download_handler_cpptoc.cc in Sources */,
 				6A1EABC61A1FE3B6005D6A3E /* file_dialog_callback_ctocpp.cc in Sources */,
+				6A07EBE21A20700D000D3ED9 /* MSURLView.m in Sources */,
 				6A1EABDF1A1FE3B6005D6A3E /* v8value_ctocpp.cc in Sources */,
 				6A1EABAD1A1FE3B6005D6A3E /* scheme_handler_factory_cpptoc.cc in Sources */,
 				6A1EAB8E1A1FE3B6005D6A3E /* cef_thread_collision_warner.cc in Sources */,
@@ -861,6 +961,7 @@
 				6A1EAB9D1A1FE3B6005D6A3E /* focus_handler_cpptoc.cc in Sources */,
 				6A1EABC71A1FE3B6005D6A3E /* frame_ctocpp.cc in Sources */,
 				6A1EABD11A1FE3B6005D6A3E /* process_message_ctocpp.cc in Sources */,
+				6ACF06211A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m in Sources */,
 				6A1EAB951A1FE3B6005D6A3E /* context_menu_handler_cpptoc.cc in Sources */,
 				6A1EABBA1A1FE3B6005D6A3E /* browser_ctocpp.cc in Sources */,
 				6A1EABA21A1FE3B6005D6A3E /* life_span_handler_cpptoc.cc in Sources */,
@@ -891,17 +992,20 @@
 				6A1EAB961A1FE3B6005D6A3E /* cookie_visitor_cpptoc.cc in Sources */,
 				6A1EABDA1A1FE3B6005D6A3E /* urlrequest_ctocpp.cc in Sources */,
 				6A1EABE01A1FE3B6005D6A3E /* web_plugin_info_ctocpp.cc in Sources */,
+				6ACF06161A2545D000032FB9 /* INAppStoreWindow.m in Sources */,
 				6A1EABE11A1FE3B6005D6A3E /* xml_reader_ctocpp.cc in Sources */,
 				6A1EABB91A1FE3B6005D6A3E /* binary_value_ctocpp.cc in Sources */,
 				6A1EABC31A1FE3B6005D6A3E /* download_item_callback_ctocpp.cc in Sources */,
 				6A1EABBE1A1FE3B6005D6A3E /* context_menu_params_ctocpp.cc in Sources */,
 				6A1EABC41A1FE3B6005D6A3E /* download_item_ctocpp.cc in Sources */,
 				6A1EABB71A1FE3B6005D6A3E /* auth_callback_ctocpp.cc in Sources */,
+				6ACF06251A2552B900032FB9 /* MSTabStyle.m in Sources */,
 				6A1EABCC1A1FE3B6005D6A3E /* post_data_ctocpp.cc in Sources */,
 				6A1EABAF1A1FE3B6005D6A3E /* task_cpptoc.cc in Sources */,
 				6A1EABA61A1FE3B6005D6A3E /* render_handler_cpptoc.cc in Sources */,
 				6A1EABD21A1FE3B6005D6A3E /* quota_callback_ctocpp.cc in Sources */,
 				6A1EABCA1A1FE3B6005D6A3E /* list_value_ctocpp.cc in Sources */,
+				6ACF06171A2545D000032FB9 /* INWindowButton.m in Sources */,
 				6A1EABB51A1FE3B6005D6A3E /* write_handler_cpptoc.cc in Sources */,
 				6A1EABC01A1FE3B6005D6A3E /* dictionary_value_ctocpp.cc in Sources */,
 				6A1EABA51A1FE3B6005D6A3E /* read_handler_cpptoc.cc in Sources */,
@@ -931,6 +1035,7 @@
 				6A1EAB921A1FE3B6005D6A3E /* browser_process_handler_cpptoc.cc in Sources */,
 				6A1EABE21A1FE3B6005D6A3E /* zip_reader_ctocpp.cc in Sources */,
 				6A1EABEB1A1FE3B6005D6A3E /* libcef_dll_wrapper2.cc in Sources */,
+				6ACF06201A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m in Sources */,
 				6A1EABE41A1FE3B6005D6A3E /* cef_byte_read_handler.cc in Sources */,
 				6A1EABAC1A1FE3B6005D6A3E /* run_file_dialog_callback_cpptoc.cc in Sources */,
 				6A1EAB8F1A1FE3B6005D6A3E /* cef_weak_ptr.cc in Sources */,
@@ -967,6 +1072,11 @@
 			isa = PBXTargetDependency;
 			target = 6A8C76B61A0C06EE000925F5 /* MiniServo */;
 			targetProxy = 6A8C76DC1A0C06EE000925F5 /* PBXContainerItemProxy */;
+		};
+		6ACF06051A25263000032FB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MMTabBarView;
+			targetProxy = 6ACF06041A25263000032FB9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
