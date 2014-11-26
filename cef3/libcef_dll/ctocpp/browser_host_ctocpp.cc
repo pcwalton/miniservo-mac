@@ -619,16 +619,6 @@ void CefBrowserHostCToCpp::DragSourceSystemDragEnded() {
   struct_->drag_source_system_drag_ended(struct_);
 }
 
-void CefBrowserHostCToCpp::Composite() {
-  if (CEF_MEMBER_MISSING(struct_, composite))
-    return;
-
-  // AUTO-GENERATED CONTENT - DELETE THIS COMMENT BEFORE MODIFYING
-
-  // Execute
-  struct_->composite(struct_);
-}
-
 void CefBrowserHostCToCpp::InitializeCompositing() {
   if (CEF_MEMBER_MISSING(struct_, initialize_compositing))
     return;

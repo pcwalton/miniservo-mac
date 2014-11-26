@@ -601,14 +601,6 @@ class CefBrowserHost : public virtual CefBase {
   virtual void DragSourceSystemDragEnded() =0;
 
   ///
-  // Instructs the browser to perform an accelerated composite. The
-  // appropriate Direct3D or OpenGL state must have been set up before calling
-  // this function.
-  ///
-  /*--cef()--*/
-  virtual void Composite() =0;
-
-  ///
   // Instructs the browser to initialize accelerated compositing. The
   // appropriate Direct3D or OpenGL state must have been set up before calling
   // this function.

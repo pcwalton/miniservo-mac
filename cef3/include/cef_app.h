@@ -60,7 +60,7 @@ class CefApp;
 // |windows_sandbox_info| parameter is only used on Windows and may be NULL (see
 // cef_sandbox_win.h for details).
 ///
-/*--cef(optional_param=application,
+/*--cef(api_hash_check,optional_param=application,
         optional_param=windows_sandbox_info)--*/
 int CefExecuteProcess(const CefMainArgs& args,
                       CefRefPtr<CefApp> application,
@@ -73,7 +73,7 @@ int CefExecuteProcess(const CefMainArgs& args,
 // The |windows_sandbox_info| parameter is only used on Windows and may be NULL
 // (see cef_sandbox_win.h for details).
 ///
-/*--cef(optional_param=application,
+/*--cef(api_hash_check,optional_param=application,
         optional_param=windows_sandbox_info)--*/
 bool CefInitialize(const CefMainArgs& args,
                    const CefSettings& settings,

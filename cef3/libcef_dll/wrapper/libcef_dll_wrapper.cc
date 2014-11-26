@@ -32,6 +32,7 @@
 #include "include/capi/cef_v8_capi.h"
 #include "include/cef_web_plugin.h"
 #include "include/capi/cef_web_plugin_capi.h"
+#include "include/cef_version.h"
 #include "libcef_dll/cpptoc/app_cpptoc.h"
 #include "libcef_dll/cpptoc/browser_process_handler_cpptoc.h"
 #include "libcef_dll/cpptoc/completion_callback_cpptoc.h"
@@ -116,6 +117,13 @@
 
 CEF_GLOBAL int CefExecuteProcess(const CefMainArgs& args,
     CefRefPtr<CefApp> application, void* windows_sandbox_info) {
+  const char* api_hash = cef_api_hash(0);
+  if (strcmp(api_hash, CEF_API_HASH_PLATFORM)) {
+    // The libcef API hash does not match the current header API hash.
+    NOTREACHED();
+    return 0;
+  }
+
   // AUTO-GENERATED CONTENT - DELETE THIS COMMENT BEFORE MODIFYING
 
   // Unverified params: application, windows_sandbox_info
@@ -133,6 +141,13 @@ CEF_GLOBAL int CefExecuteProcess(const CefMainArgs& args,
 CEF_GLOBAL bool CefInitialize(const CefMainArgs& args,
     const CefSettings& settings, CefRefPtr<CefApp> application,
     void* windows_sandbox_info) {
+  const char* api_hash = cef_api_hash(0);
+  if (strcmp(api_hash, CEF_API_HASH_PLATFORM)) {
+    // The libcef API hash does not match the current header API hash.
+    NOTREACHED();
+    return false;
+  }
+
   // AUTO-GENERATED CONTENT - DELETE THIS COMMENT BEFORE MODIFYING
 
   // Unverified params: application, windows_sandbox_info

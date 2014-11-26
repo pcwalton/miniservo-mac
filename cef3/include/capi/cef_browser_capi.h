@@ -548,13 +548,6 @@ typedef struct _cef_browser_host_t {
       struct _cef_browser_host_t* self);
 
   ///
-  // Instructs the browser to perform an accelerated composite. The appropriate
-  // Direct3D or OpenGL state must have been set up before calling this
-  // function.
-  ///
-  void (CEF_CALLBACK *composite)(struct _cef_browser_host_t* self);
-
-  ///
   // Instructs the browser to initialize accelerated compositing. The
   // appropriate Direct3D or OpenGL state must have been set up before calling
   // this function.
