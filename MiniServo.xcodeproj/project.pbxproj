@@ -140,6 +140,9 @@
 		6ACF06201A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF061C1A2545E200032FB9 /* INWindowBackgroundView+CoreUIRendering.m */; };
 		6ACF06211A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF061E1A2545E200032FB9 /* NSDocument+INAppStoreWindowFixes.m */; };
 		6ACF06251A2552B900032FB9 /* MSTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06241A2552B900032FB9 /* MSTabStyle.m */; };
+		6ACF06281A25B4C100032FB9 /* MSTabModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06271A25B4C100032FB9 /* MSTabModel.m */; };
+		6ACF062B1A26642100032FB9 /* MSStatusBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF062A1A26642100032FB9 /* MSStatusBarCell.m */; };
+		6ACF062D1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6ACF062C1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -418,6 +421,11 @@
 		6ACF06221A25465500032FB9 /* INAppStoreWindowCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindowCompatibility.h; path = INAppStoreWindow/INAppStoreWindow/INAppStoreWindowCompatibility.h; sourceTree = SOURCE_ROOT; };
 		6ACF06231A2552B900032FB9 /* MSTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTabStyle.h; sourceTree = "<group>"; };
 		6ACF06241A2552B900032FB9 /* MSTabStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTabStyle.m; sourceTree = "<group>"; };
+		6ACF06261A25B4C100032FB9 /* MSTabModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTabModel.h; sourceTree = "<group>"; };
+		6ACF06271A25B4C100032FB9 /* MSTabModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTabModel.m; sourceTree = "<group>"; };
+		6ACF06291A26642100032FB9 /* MSStatusBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSStatusBarCell.h; sourceTree = "<group>"; };
+		6ACF062A1A26642100032FB9 /* MSStatusBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSStatusBarCell.m; sourceTree = "<group>"; };
+		6ACF062C1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = ServoLibrarySelectionHelp.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -737,6 +745,10 @@
 				6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */,
 				6A8C78241A0C40C6000925F5 /* MSCEFClient.h */,
 				6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */,
+				6ACF06291A26642100032FB9 /* MSStatusBarCell.h */,
+				6ACF062A1A26642100032FB9 /* MSStatusBarCell.m */,
+				6ACF06261A25B4C100032FB9 /* MSTabModel.h */,
+				6ACF06271A25B4C100032FB9 /* MSTabModel.m */,
 				6ACF06231A2552B900032FB9 /* MSTabStyle.h */,
 				6ACF06241A2552B900032FB9 /* MSTabStyle.m */,
 				6A07EBE01A20700D000D3ED9 /* MSURLView.h */,
@@ -744,6 +756,7 @@
 				6A8C76EE1A0C2C83000925F5 /* MSView.h */,
 				6A8C76EF1A0C2C83000925F5 /* MSView.mm */,
 				6A8C76CF1A0C06EE000925F5 /* MainMenu.xib */,
+				6ACF062C1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf */,
 				6A1EAABF1A1FE3B6005D6A3E /* libcef_dll */,
 				6A8C76D21A0C06EE000925F5 /* Images.xcassets */,
 				6A8C76C11A0C06EE000925F5 /* Supporting Files */,
@@ -914,6 +927,7 @@
 				6A8C76C51A0C06EE000925F5 /* InfoPlist.strings in Resources */,
 				6A3FA6F91A1D63B7001BC19E /* failure.html in Resources */,
 				6A3FA6FD1A1D63B7001BC19E /* quotes.css in Resources */,
+				6ACF062D1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf in Resources */,
 				6A8C76D31A0C06EE000925F5 /* Images.xcassets in Resources */,
 				6A8C76CB1A0C06EE000925F5 /* Credits.rtf in Resources */,
 				6A8C76D11A0C06EE000925F5 /* MainMenu.xib in Resources */,
@@ -989,6 +1003,7 @@
 				6A1EABE71A1FE3B6005D6A3E /* cef_stream_resource_handler.cc in Sources */,
 				6A1EABBD1A1FE3B6005D6A3E /* command_line_ctocpp.cc in Sources */,
 				6A1EAB8D1A1FE3B6005D6A3E /* cef_thread_checker_impl.cc in Sources */,
+				6ACF062B1A26642100032FB9 /* MSStatusBarCell.m in Sources */,
 				6A1EAB961A1FE3B6005D6A3E /* cookie_visitor_cpptoc.cc in Sources */,
 				6A1EABDA1A1FE3B6005D6A3E /* urlrequest_ctocpp.cc in Sources */,
 				6A1EABE01A1FE3B6005D6A3E /* web_plugin_info_ctocpp.cc in Sources */,
@@ -1047,6 +1062,7 @@
 				6A1EABC11A1FE3B6005D6A3E /* domdocument_ctocpp.cc in Sources */,
 				6A8C76F01A0C2C83000925F5 /* MSView.mm in Sources */,
 				6A1EABD71A1FE3B6005D6A3E /* stream_reader_ctocpp.cc in Sources */,
+				6ACF06281A25B4C100032FB9 /* MSTabModel.m in Sources */,
 				6A1EABE81A1FE3B6005D6A3E /* cef_xml_object.cc in Sources */,
 				6A1EAB991A1FE3B6005D6A3E /* domvisitor_cpptoc.cc in Sources */,
 				6A1EABE61A1FE3B6005D6A3E /* cef_message_router.cc in Sources */,

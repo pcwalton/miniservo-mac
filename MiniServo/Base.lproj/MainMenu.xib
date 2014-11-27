@@ -15,13 +15,18 @@
         <customObject id="Voe-Tx-rLC" customClass="MSAppDelegate">
             <connections>
                 <outlet property="backForwardButton" destination="ujA-Th-KoY" id="5LG-QC-Xkl"/>
-                <outlet property="browserView" destination="WqN-0U-Ydg" id="nri-bq-dVt"/>
+                <outlet property="browserView" destination="9Jh-FK-B0G" id="X6K-xk-mRP"/>
+                <outlet property="renderingThreadsView" destination="KmU-pG-Tct" id="99g-LK-jQ9"/>
+                <outlet property="statusBar" destination="w34-l6-v4r" id="naD-Zy-Ajg"/>
+                <outlet property="statusBarWindow" destination="VSF-dr-Tzi" id="wzB-g9-tVE"/>
                 <outlet property="stopReloadButton" destination="0Al-l4-ZH0" id="XCK-FU-zT7"/>
                 <outlet property="tabBar" destination="FpV-uP-3Md" id="7dB-ka-6js"/>
                 <outlet property="tabView" destination="dxc-LB-XAk" id="E1r-oN-1jB"/>
                 <outlet property="titleBarView" destination="VVc-Cg-chP" id="Ac3-fu-gvu"/>
                 <outlet property="urlBar" destination="jP8-vH-xB8" id="cvt-Aw-Uwc"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
+                <outlet property="zoomInMenuItem" destination="UYT-Zk-oHw" id="ln2-XJ-IKK"/>
+                <outlet property="zoomOutMenuItem" destination="Qul-yv-XrA" id="4KR-zf-2pX"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -79,6 +84,11 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="File" id="bib-Uj-vzu">
                         <items>
+                            <menuItem title="Open File…" keyEquivalent="o" id="Pxs-QL-J0I">
+                                <connections>
+                                    <action selector="openFile:" target="Voe-Tx-rLC" id="rmt-e0-IN2"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open Location…" keyEquivalent="l" id="IAo-SY-fd9">
                                 <connections>
                                     <action selector="selectText:" target="jP8-vH-xB8" id="Kcm-vd-LEx"/>
@@ -306,6 +316,30 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="View" id="2Zd-zh-Qms">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="View" id="U1f-un-He6">
+                        <items>
+                            <menuItem title="Zoom In" keyEquivalent="=" id="UYT-Zk-oHw">
+                                <connections>
+                                    <action selector="zoomIn:" target="Voe-Tx-rLC" id="ckw-s4-Tpt"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoom Out" keyEquivalent="-" id="Qul-yv-XrA">
+                                <connections>
+                                    <action selector="zoomOut:" target="Voe-Tx-rLC" id="WuE-kT-RbD"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="wzn-Er-u3Z"/>
+                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="aeI-uL-kXO">
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="C0o-Hh-JZ7"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="History" id="rFE-1G-h5e">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="History" id="lVg-9m-Pbm">
@@ -371,25 +405,10 @@
                 <rect key="frame" x="0.0" y="0.0" width="960" height="750"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <tabView type="noTabsNoBorder" id="dxc-LB-XAk">
-                        <rect key="frame" x="-8" y="-8" width="976" height="736"/>
+                    <customView id="9Jh-FK-B0G" customClass="MSView">
+                        <rect key="frame" x="0.0" y="0.0" width="960" height="728"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <font key="font" metaFont="system"/>
-                        <tabViewItems>
-                            <tabViewItem label="Servo" identifier="1" id="eWn-Yv-e44">
-                                <view key="view" id="90w-z6-UkM">
-                                    <rect key="frame" x="0.0" y="0.0" width="976" height="736"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <customView id="WqN-0U-Ydg" customClass="MSView">
-                                            <rect key="frame" x="8" y="7" width="960" height="729"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        </customView>
-                                    </subviews>
-                                </view>
-                            </tabViewItem>
-                        </tabViewItems>
-                    </tabView>
+                    </customView>
                     <customView id="FpV-uP-3Md" customClass="MMTabBarView">
                         <rect key="frame" x="0.0" y="728" width="960" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -402,16 +421,16 @@
         </window>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="8Al-QU-20c">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
-            <rect key="contentRect" x="493" y="390" width="479" height="95"/>
+            <rect key="contentRect" x="493" y="390" width="479" height="122"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="300" height="95"/>
             <value key="maxSize" type="size" width="1000" height="95"/>
             <view key="contentView" id="OtV-pI-5Q9">
-                <rect key="frame" x="0.0" y="0.0" width="479" height="95"/>
+                <rect key="frame" x="0.0" y="0.0" width="479" height="122"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ZbM-wZ-0rS">
-                        <rect key="frame" x="17" y="58" width="189" height="17"/>
+                        <rect key="frame" x="17" y="85" width="189" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of Servo framework:" id="Saw-4a-fXM">
                             <font key="font" metaFont="system"/>
@@ -419,17 +438,26 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="X1p-rC-9R3">
-                        <rect key="frame" x="208" y="18" width="254" height="28"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="K19-Zc-y4U">
+                        <rect key="frame" x="82" y="56" width="124" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="You will need to restart MiniServo for changes to this location to take effect." id="0Bw-nt-ksx">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Rendering threads:" id="NCW-KU-6IU">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="X1p-rC-9R3">
+                        <rect key="frame" x="208" y="20" width="238" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="You will need to restart MiniServo for these settings to take effect." id="0Bw-nt-ksx">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" id="wO1-0Z-Vcu">
-                        <rect key="frame" x="208" y="58" width="167" height="17"/>
+                        <rect key="frame" x="208" y="85" width="167" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingHead" sendsActionOnEndEditing="YES" title="/Source/servo/framework" id="XSV-No-dbB">
                             <font key="font" metaFont="system"/>
@@ -441,7 +469,7 @@
                         </connections>
                     </textField>
                     <button verticalHuggingPriority="750" id="g4n-Kq-YBO">
-                        <rect key="frame" x="374" y="48" width="101" height="32"/>
+                        <rect key="frame" x="374" y="75" width="101" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Change…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gld-vf-nSh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -451,6 +479,21 @@
                             <action selector="changeFrameworkPath:" target="Voe-Tx-rLC" id="wIM-rx-Gcb"/>
                         </connections>
                     </button>
+                    <comboBox verticalHuggingPriority="750" id="KmU-pG-Tct">
+                        <rect key="frame" x="211" y="52" width="60" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="1" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="3IF-Y2-EPE">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </comboBoxCell>
+                        <connections>
+                            <binding destination="nYE-RQ-Ymh" name="value" keyPath="values.ServoRenderingThreads" id="neL-Sr-P18"/>
+                        </connections>
+                    </comboBox>
                 </subviews>
             </view>
         </window>
@@ -513,6 +556,32 @@
                 </textField>
             </subviews>
         </customView>
+        <tabView type="noTabsNoBorder" id="dxc-LB-XAk">
+            <rect key="frame" x="0.0" y="0.0" width="276" height="190"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <font key="font" metaFont="system"/>
+            <tabViewItems/>
+        </tabView>
+        <window title="Status Bar Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="VSF-dr-Tzi">
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="131" y="159" width="480" height="17"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <view key="contentView" id="HkF-Vn-mdB">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="17"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="w34-l6-v4r">
+                        <rect key="frame" x="0.0" y="0.0" width="481" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Loading…" usesSingleLineMode="YES" id="B0P-iO-Mem" customClass="MSStatusBarCell">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+            </view>
+        </window>
     </objects>
     <resources>
         <image name="BackIcon" width="18" height="18"/>

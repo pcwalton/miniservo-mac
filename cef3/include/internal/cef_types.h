@@ -381,6 +381,11 @@ typedef struct _cef_settings_t {
   // of the background color but will be otherwise ignored.
   ///
   cef_color_t background_color;
+
+  ///
+  // Determines how many rendering threads are used.
+  ///
+  int rendering_threads;
 } cef_settings_t;
 
 ///

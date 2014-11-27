@@ -56,5 +56,6 @@
                                                               bool canGoBack,
                                                               bool canGoForward)
 {
+    [mAppDelegate setIsLoading: (BOOL)isLoading];
     [mAppDelegate setCanGoBack: canGoBack forward: canGoForward];
 }
