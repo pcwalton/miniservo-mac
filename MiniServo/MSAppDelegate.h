@@ -19,9 +19,17 @@
 class CefBrowser;
 class MSCEFClient;
 
-@interface MSAppDelegate : NSObject <NSApplicationDelegate, NSTextFieldDelegate, NSWindowDelegate> {
+@interface MSAppDelegate : NSObject <NSApplicationDelegate,
+                                     NSTableViewDelegate,
+                                     NSTextFieldDelegate,
+                                     NSTextViewDelegate,
+                                     NSWindowDelegate> {
     CefRefPtr<CefBrowser> mBrowser;
     CefRefPtr<MSCEFClient> mCEFClient;
+
+    NSManagedObjectModel *mManagedObjectModel;
+    NSPersistentStoreCoordinator *mPersistentStoreCoordinator;
+    NSPopover *mBookmarksPopover;
     BOOL mDoingWork;
 }
 
@@ -36,18 +44,38 @@ class MSCEFClient;
 @property (assign) IBOutlet NSWindow *statusBarWindow;
 @property (assign) IBOutlet NSTextField *statusBar;
 @property (assign) IBOutlet NSComboBox *renderingThreadsView;
+@property (assign) IBOutlet NSMenuItem *actualSizeMenuItem;
 @property (assign) IBOutlet NSMenuItem *zoomInMenuItem;
 @property (assign) IBOutlet NSMenuItem *zoomOutMenuItem;
+@property (assign) IBOutlet NSMenu *bookmarksMenu;
+@property (assign) IBOutlet NSView *bookmarksPopoverView;
+@property (assign) IBOutlet NSSegmentedControl *bookmarksButton;
+@property (assign) IBOutlet NSArrayController *bookmarksButtonArrayController;
+@property (assign) IBOutlet NSWindow *splendidBarWindow;
+@property (assign) IBOutlet NSTableView *splendidBarTableView;
+@property (assign) IBOutlet NSView *splendidBarSearchResultsSectionView;
+@property (assign) IBOutlet NSTextView *splendidBarSearchResultsView;
+@property (assign) IBOutlet NSView *urlBarContainer;
+@property (strong) NSManagedObjectContext *managedObjectContext;
 
++ (NSString *)URLEncode:(NSString *)query;
 - (IBAction)changeFrameworkPath:(id)sender;
 - (IBAction)goBackOrForward:(id)sender;
 - (IBAction)goBack:(id)sender;
 - (IBAction)goForward:(id)sender;
 - (IBAction)stopOrReload:(id)sender;
 - (IBAction)openFile:(id)sender;
+- (IBAction)zoomToActualSize:(id)sender;
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
+- (IBAction)bookmarkCurrentPageOrShowBookmarksPopover:(id)sender;
+- (IBAction)bookmarkCurrentPage:(id)sender;
+- (IBAction)reportBug:(id)sender;
+- (void)controlTextDidEndEditing:(NSNotification *)notification;
+- (void)showBookmarksPopover;
+- (void)updateZoomMenuItems;
 - (NSString *)promptForNewFrameworkPath;
+- (void)setDisplayedURL:(NSString *)urlString;
 - (void)navigateToEnteredURL;
 - (void)spinCEFEventLoop:(id)nothing;
 - (void)repositionStatusBar;
@@ -56,7 +84,20 @@ class MSCEFClient;
 - (void)sendCEFScrollEventWithDelta:(NSPoint)delta origin:(NSPoint)origin;
 - (void)sendCEFKeyboardEventForKey:(short)keyCode character:(char16)character;
 - (void)setIsLoading:(BOOL)isLoading;
-- (void)setCanGoBack:(BOOL)canGoBack forward:(BOOL)canGoForward;
+- (void)updateNavigationState:(id)unused;
+- (void)pinchZoom:(CGFloat)zoomLevel;
 - (void)initializeCompositing;
+- (void)bookmarksMenuDidOpen:(id)unused;
+- (void)navigateToBookmark:(id)sender;
+- (void)navigateToURL:(NSURL *)url;
+- (void)populateBookmarksMenu:(id)unused;
+- (void)replaceBookmarkMenuItemsWith:(NSArray *)bookmarkIDs;
+- (void)closePopoversIfNecessary:(NSEvent *)event;
+- (void)navigateToBookmarkAtIndex:(NSInteger)index;
+- (void)updateSplendidBarWithSearchAutocompleteData:(NSData *)data;
+- (void)searchFor:(NSString *)query;
+- (void)textView:(NSTextView *)textView
+   clickedOnCell:(id<NSTextAttachmentCell>)cell
+          inRect:(NSRect)cellFrame;
 
 @end

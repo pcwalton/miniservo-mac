@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6A07EBE21A20700D000D3ED9 /* MSURLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A07EBE11A20700D000D3ED9 /* MSURLView.m */; };
+		6A10FEB01A2AE45300F2F8EA /* MSSearchResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A10FEAF1A2AE45300F2F8EA /* MSSearchResultCell.m */; };
+		6A10FEB31A2AF97900F2F8EA /* MSSplendidBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A10FEB21A2AF97900F2F8EA /* MSSplendidBarView.m */; };
 		6A1EAB841A1FE3B6005D6A3E /* cef_atomicops_x86_gcc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EAAC11A1FE3B6005D6A3E /* cef_atomicops_x86_gcc.cc */; };
 		6A1EAB851A1FE3B6005D6A3E /* cef_bind_helpers.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EAAC21A1FE3B6005D6A3E /* cef_bind_helpers.cc */; };
 		6A1EAB861A1FE3B6005D6A3E /* cef_callback_helpers.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6A1EAAC31A1FE3B6005D6A3E /* cef_callback_helpers.cc */; };
@@ -119,6 +121,10 @@
 		6A3FA6FD1A1D63B7001BC19E /* quotes.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FA6F61A1D63B7001BC19E /* quotes.css */; };
 		6A3FA6FE1A1D63B7001BC19E /* servo.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FA6F71A1D63B7001BC19E /* servo.css */; };
 		6A3FA6FF1A1D63B7001BC19E /* user-agent.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FA6F81A1D63B7001BC19E /* user-agent.css */; };
+		6A4B3F881A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6A4B3F861A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodeld */; };
+		6A4B3F911A2A7E4B0008B45A /* MSBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4B3F901A2A7E4B0008B45A /* MSBookmark.m */; };
+		6A4B3F941A2A994B0008B45A /* MSHistoryEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A4B3F931A2A994B0008B45A /* MSHistoryEntry.m */; };
+		6A4B3F971A2AA76D0008B45A /* MSBookmarksListView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A4B3F961A2AA76D0008B45A /* MSBookmarksListView.mm */; };
 		6A8C76BB1A0C06EE000925F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A8C76BA1A0C06EE000925F5 /* Cocoa.framework */; };
 		6A8C76C51A0C06EE000925F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A8C76C31A0C06EE000925F5 /* InfoPlist.strings */; };
 		6A8C76C71A0C06EE000925F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76C61A0C06EE000925F5 /* main.m */; };
@@ -133,7 +139,6 @@
 		6A8C76F21A0C2F97000925F5 /* MSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */; };
 		6A8C78251A0C40C6000925F5 /* MSCEFClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */; };
 		6ACF06061A25264500032FB9 /* MMTabBarView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ACF06031A2525F200032FB9 /* MMTabBarView.framework */; };
-		6ACF06071A25265E00032FB9 /* MMTabBarView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6ACF06031A2525F200032FB9 /* MMTabBarView.framework */; };
 		6ACF06161A2545D000032FB9 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06131A2545D000032FB9 /* INAppStoreWindow.m */; };
 		6ACF06171A2545D000032FB9 /* INWindowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06151A2545D000032FB9 /* INWindowButton.m */; };
 		6ACF061F1A2545E200032FB9 /* INAppStoreWindowSwizzling.c in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06191A2545E200032FB9 /* INAppStoreWindowSwizzling.c */; };
@@ -173,10 +178,9 @@
 		6A8C78211A0C36AA000925F5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "";
+			dstPath = "@executable_path/../Frameworks";
 			dstSubfolderSpec = 10;
 			files = (
-				6ACF06071A25265E00032FB9 /* MMTabBarView.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +189,10 @@
 /* Begin PBXFileReference section */
 		6A07EBE01A20700D000D3ED9 /* MSURLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSURLView.h; sourceTree = "<group>"; };
 		6A07EBE11A20700D000D3ED9 /* MSURLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSURLView.m; sourceTree = "<group>"; };
+		6A10FEAE1A2AE45300F2F8EA /* MSSearchResultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSearchResultCell.h; sourceTree = "<group>"; };
+		6A10FEAF1A2AE45300F2F8EA /* MSSearchResultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSearchResultCell.m; sourceTree = "<group>"; };
+		6A10FEB11A2AF97900F2F8EA /* MSSplendidBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSplendidBarView.h; sourceTree = "<group>"; };
+		6A10FEB21A2AF97900F2F8EA /* MSSplendidBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSplendidBarView.m; sourceTree = "<group>"; };
 		6A1EAAC11A1FE3B6005D6A3E /* cef_atomicops_x86_gcc.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_atomicops_x86_gcc.cc; sourceTree = "<group>"; };
 		6A1EAAC21A1FE3B6005D6A3E /* cef_bind_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_bind_helpers.cc; sourceTree = "<group>"; };
 		6A1EAAC31A1FE3B6005D6A3E /* cef_callback_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cef_callback_helpers.cc; sourceTree = "<group>"; };
@@ -384,6 +392,13 @@
 		6A3FA6F61A1D63B7001BC19E /* quotes.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = quotes.css; sourceTree = "<group>"; };
 		6A3FA6F71A1D63B7001BC19E /* servo.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = servo.css; sourceTree = "<group>"; };
 		6A3FA6F81A1D63B7001BC19E /* user-agent.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "user-agent.css"; sourceTree = "<group>"; };
+		6A4B3F871A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BookmarksHistoryModel.xcdatamodel; sourceTree = "<group>"; };
+		6A4B3F8F1A2A7E4B0008B45A /* MSBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSBookmark.h; sourceTree = "<group>"; };
+		6A4B3F901A2A7E4B0008B45A /* MSBookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSBookmark.m; sourceTree = "<group>"; };
+		6A4B3F921A2A994B0008B45A /* MSHistoryEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSHistoryEntry.h; sourceTree = "<group>"; };
+		6A4B3F931A2A994B0008B45A /* MSHistoryEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSHistoryEntry.m; sourceTree = "<group>"; };
+		6A4B3F951A2AA76D0008B45A /* MSBookmarksListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSBookmarksListView.h; sourceTree = "<group>"; };
+		6A4B3F961A2AA76D0008B45A /* MSBookmarksListView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSBookmarksListView.mm; sourceTree = "<group>"; };
 		6A8C76B71A0C06EE000925F5 /* MiniServo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniServo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A8C76BA1A0C06EE000925F5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6A8C76BD1A0C06EE000925F5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -743,8 +758,18 @@
 				6A3FA6F11A1D6394001BC19E /* Servo Resources */,
 				6A8C76CC1A0C06EE000925F5 /* MSAppDelegate.h */,
 				6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */,
+				6A4B3F8F1A2A7E4B0008B45A /* MSBookmark.h */,
+				6A4B3F901A2A7E4B0008B45A /* MSBookmark.m */,
+				6A4B3F951A2AA76D0008B45A /* MSBookmarksListView.h */,
+				6A4B3F961A2AA76D0008B45A /* MSBookmarksListView.mm */,
 				6A8C78241A0C40C6000925F5 /* MSCEFClient.h */,
 				6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */,
+				6A4B3F921A2A994B0008B45A /* MSHistoryEntry.h */,
+				6A4B3F931A2A994B0008B45A /* MSHistoryEntry.m */,
+				6A10FEAE1A2AE45300F2F8EA /* MSSearchResultCell.h */,
+				6A10FEAF1A2AE45300F2F8EA /* MSSearchResultCell.m */,
+				6A10FEB11A2AF97900F2F8EA /* MSSplendidBarView.h */,
+				6A10FEB21A2AF97900F2F8EA /* MSSplendidBarView.m */,
 				6ACF06291A26642100032FB9 /* MSStatusBarCell.h */,
 				6ACF062A1A26642100032FB9 /* MSStatusBarCell.m */,
 				6ACF06261A25B4C100032FB9 /* MSTabModel.h */,
@@ -756,6 +781,7 @@
 				6A8C76EE1A0C2C83000925F5 /* MSView.h */,
 				6A8C76EF1A0C2C83000925F5 /* MSView.mm */,
 				6A8C76CF1A0C06EE000925F5 /* MainMenu.xib */,
+				6A4B3F861A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodeld */,
 				6ACF062C1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf */,
 				6A1EAABF1A1FE3B6005D6A3E /* libcef_dll */,
 				6A8C76D21A0C06EE000925F5 /* Images.xcassets */,
@@ -970,6 +996,7 @@
 				6A1EABAD1A1FE3B6005D6A3E /* scheme_handler_factory_cpptoc.cc in Sources */,
 				6A1EAB8E1A1FE3B6005D6A3E /* cef_thread_collision_warner.cc in Sources */,
 				6A1EAB9B1A1FE3B6005D6A3E /* drag_handler_cpptoc.cc in Sources */,
+				6A4B3F971A2AA76D0008B45A /* MSBookmarksListView.mm in Sources */,
 				6A1EAB9F1A1FE3B6005D6A3E /* get_geolocation_callback_cpptoc.cc in Sources */,
 				6A1EAB9C1A1FE3B6005D6A3E /* end_tracing_callback_cpptoc.cc in Sources */,
 				6A1EAB9D1A1FE3B6005D6A3E /* focus_handler_cpptoc.cc in Sources */,
@@ -988,6 +1015,7 @@
 				6A1EABA11A1FE3B6005D6A3E /* keyboard_handler_cpptoc.cc in Sources */,
 				6A1EABA71A1FE3B6005D6A3E /* render_process_handler_cpptoc.cc in Sources */,
 				6A1EABAA1A1FE3B6005D6A3E /* resource_bundle_handler_cpptoc.cc in Sources */,
+				6A4B3F941A2A994B0008B45A /* MSHistoryEntry.m in Sources */,
 				6A1EABB61A1FE3B6005D6A3E /* allow_certificate_error_callback_ctocpp.cc in Sources */,
 				6A1EAB871A1FE3B6005D6A3E /* cef_callback_internal.cc in Sources */,
 				6A1EAB971A1FE3B6005D6A3E /* dialog_handler_cpptoc.cc in Sources */,
@@ -1023,6 +1051,7 @@
 				6ACF06171A2545D000032FB9 /* INWindowButton.m in Sources */,
 				6A1EABB51A1FE3B6005D6A3E /* write_handler_cpptoc.cc in Sources */,
 				6A1EABC01A1FE3B6005D6A3E /* dictionary_value_ctocpp.cc in Sources */,
+				6A4B3F911A2A7E4B0008B45A /* MSBookmark.m in Sources */,
 				6A1EABA51A1FE3B6005D6A3E /* read_handler_cpptoc.cc in Sources */,
 				6A1EABB81A1FE3B6005D6A3E /* before_download_callback_ctocpp.cc in Sources */,
 				6A1EABAE1A1FE3B6005D6A3E /* string_visitor_cpptoc.cc in Sources */,
@@ -1034,7 +1063,9 @@
 				6A1EAB9E1A1FE3B6005D6A3E /* geolocation_handler_cpptoc.cc in Sources */,
 				6A1EABA91A1FE3B6005D6A3E /* request_handler_cpptoc.cc in Sources */,
 				6A8C78251A0C40C6000925F5 /* MSCEFClient.mm in Sources */,
+				6A10FEB31A2AF97900F2F8EA /* MSSplendidBarView.m in Sources */,
 				6A1EABA41A1FE3B6005D6A3E /* print_handler_cpptoc.cc in Sources */,
+				6A10FEB01A2AE45300F2F8EA /* MSSearchResultCell.m in Sources */,
 				6A1EABA81A1FE3B6005D6A3E /* request_context_handler_cpptoc.cc in Sources */,
 				6A1EABCB1A1FE3B6005D6A3E /* menu_model_ctocpp.cc in Sources */,
 				6A1EABC91A1FE3B6005D6A3E /* jsdialog_callback_ctocpp.cc in Sources */,
@@ -1044,6 +1075,7 @@
 				6A1EABDD1A1FE3B6005D6A3E /* v8stack_frame_ctocpp.cc in Sources */,
 				6A1EAB891A1FE3B6005D6A3E /* cef_lock_impl.cc in Sources */,
 				6A1EABBF1A1FE3B6005D6A3E /* cookie_manager_ctocpp.cc in Sources */,
+				6A4B3F881A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodeld in Sources */,
 				6A1EAB8B1A1FE3B6005D6A3E /* cef_ref_counted.cc in Sources */,
 				6A1EABD81A1FE3B6005D6A3E /* stream_writer_ctocpp.cc in Sources */,
 				6A1EABCE1A1FE3B6005D6A3E /* print_dialog_callback_ctocpp.cc in Sources */,
@@ -1332,6 +1364,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		6A4B3F861A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				6A4B3F871A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodel */,
+			);
+			currentVersion = 6A4B3F871A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodel */;
+			path = BookmarksHistoryModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6A8C76AF1A0C06EE000925F5 /* Project object */;
 }

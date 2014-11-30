@@ -57,5 +57,7 @@
                                                               bool canGoForward)
 {
     [mAppDelegate setIsLoading: (BOOL)isLoading];
-    [mAppDelegate setCanGoBack: canGoBack forward: canGoForward];
+    [mAppDelegate performSelectorOnMainThread:@selector(updateNavigationState:)
+                                   withObject:nil
+                                waitUntilDone: NO];
 }

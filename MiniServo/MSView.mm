@@ -132,6 +132,10 @@
     [appDelegate sendCEFScrollEventWithDelta:delta origin:origin];
 }
 
+- (void)magnifyWithEvent:(NSEvent *)event {
+    [appDelegate pinchZoom: 1.0 + [event magnification]];
+}
+
 - (BOOL)acceptsFirstResponder {
     return YES;
 }
