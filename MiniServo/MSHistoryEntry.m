@@ -11,6 +11,8 @@
 
 @implementation MSHistoryEntry
 
+@synthesize date;
+
 @dynamic url;
 @dynamic title;
 

@@ -28,9 +28,7 @@
                                green:255.0/255.0
                                 blue:255.0/255.0
                                alpha:0.97] set];
-    [[NSBezierPath bezierPathWithRoundedRect:[self frame]
-                                     xRadius:6.0
-                                     yRadius:6.0] fill];
+    [[NSBezierPath bezierPathWithRoundedRect:[self frame] xRadius:6.0 yRadius:6.0] fill];
     [NSGraphicsContext restoreGraphicsState];
 }
 

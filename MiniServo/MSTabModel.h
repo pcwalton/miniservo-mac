@@ -13,6 +13,7 @@
     BOOL _isProcessing;
 }
 
-@property(assign) BOOL isProcessing;
+@property (assign) BOOL isProcessing;
+@property (strong) NSImage *icon;
 
 @end

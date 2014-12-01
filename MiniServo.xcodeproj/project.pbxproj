@@ -138,6 +138,10 @@
 		6A8C76F01A0C2C83000925F5 /* MSView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76EF1A0C2C83000925F5 /* MSView.mm */; };
 		6A8C76F21A0C2F97000925F5 /* MSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */; };
 		6A8C78251A0C40C6000925F5 /* MSCEFClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */; };
+		6AC160EA1A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6AC160E91A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm */; };
+		6AC160EF1A2BF165005CD0D3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AC160EE1A2BF165005CD0D3 /* CoreServices.framework */; };
+		6AC160F21A2BFD5C005CD0D3 /* MSSplendidBarResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC160F11A2BFD5C005CD0D3 /* MSSplendidBarResultView.m */; };
+		6AC160F61A2C176F005CD0D3 /* MSURLField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC160F51A2C176F005CD0D3 /* MSURLField.m */; };
 		6ACF06061A25264500032FB9 /* MMTabBarView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ACF06031A2525F200032FB9 /* MMTabBarView.framework */; };
 		6ACF06161A2545D000032FB9 /* INAppStoreWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06131A2545D000032FB9 /* INAppStoreWindow.m */; };
 		6ACF06171A2545D000032FB9 /* INWindowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ACF06151A2545D000032FB9 /* INWindowButton.m */; };
@@ -422,6 +426,14 @@
 		6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSAppDelegate.mm; sourceTree = "<group>"; };
 		6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSCEFClient.mm; sourceTree = "<group>"; };
 		6A8C78241A0C40C6000925F5 /* MSCEFClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCEFClient.h; sourceTree = "<group>"; };
+		6AC160E81A2BA5F9005CD0D3 /* NSString+MSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MSStringAdditions.h"; path = "../NSString+MSStringAdditions.h"; sourceTree = "<group>"; };
+		6AC160E91A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "NSString+MSStringAdditions.mm"; path = "../NSString+MSStringAdditions.mm"; sourceTree = "<group>"; };
+		6AC160EB1A2BA8DF005CD0D3 /* MSBookmarkOrHistoryEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSBookmarkOrHistoryEntry.h; sourceTree = "<group>"; };
+		6AC160EE1A2BF165005CD0D3 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
+		6AC160F01A2BFD5C005CD0D3 /* MSSplendidBarResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSplendidBarResultView.h; sourceTree = "<group>"; };
+		6AC160F11A2BFD5C005CD0D3 /* MSSplendidBarResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSplendidBarResultView.m; sourceTree = "<group>"; };
+		6AC160F41A2C176F005CD0D3 /* MSURLField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSURLField.h; sourceTree = "<group>"; };
+		6AC160F51A2C176F005CD0D3 /* MSURLField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSURLField.m; sourceTree = "<group>"; };
 		6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MMTabBarView.xcodeproj; path = MMTabBarView/MMTabBarView/MMTabBarView.xcodeproj; sourceTree = "<group>"; };
 		6ACF06121A2545D000032FB9 /* INAppStoreWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INAppStoreWindow.h; path = INAppStoreWindow/INAppStoreWindow/INAppStoreWindow.h; sourceTree = SOURCE_ROOT; };
 		6ACF06131A2545D000032FB9 /* INAppStoreWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INAppStoreWindow.m; path = INAppStoreWindow/INAppStoreWindow/INAppStoreWindow.m; sourceTree = SOURCE_ROOT; };
@@ -449,6 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6ACF06061A25264500032FB9 /* MMTabBarView.framework in Frameworks */,
+				6AC160EF1A2BF165005CD0D3 /* CoreServices.framework in Frameworks */,
 				6A8C76BB1A0C06EE000925F5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -744,6 +757,7 @@
 		6A8C76BC1A0C06EE000925F5 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6AC160EE1A2BF165005CD0D3 /* CoreServices.framework */,
 				6A8C76BD1A0C06EE000925F5 /* AppKit.framework */,
 				6A8C76BE1A0C06EE000925F5 /* CoreData.framework */,
 				6A8C76BF1A0C06EE000925F5 /* Foundation.framework */,
@@ -756,30 +770,7 @@
 			children = (
 				6ACF06111A25459600032FB9 /* INAppStoreWindow */,
 				6A3FA6F11A1D6394001BC19E /* Servo Resources */,
-				6A8C76CC1A0C06EE000925F5 /* MSAppDelegate.h */,
-				6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */,
-				6A4B3F8F1A2A7E4B0008B45A /* MSBookmark.h */,
-				6A4B3F901A2A7E4B0008B45A /* MSBookmark.m */,
-				6A4B3F951A2AA76D0008B45A /* MSBookmarksListView.h */,
-				6A4B3F961A2AA76D0008B45A /* MSBookmarksListView.mm */,
-				6A8C78241A0C40C6000925F5 /* MSCEFClient.h */,
-				6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */,
-				6A4B3F921A2A994B0008B45A /* MSHistoryEntry.h */,
-				6A4B3F931A2A994B0008B45A /* MSHistoryEntry.m */,
-				6A10FEAE1A2AE45300F2F8EA /* MSSearchResultCell.h */,
-				6A10FEAF1A2AE45300F2F8EA /* MSSearchResultCell.m */,
-				6A10FEB11A2AF97900F2F8EA /* MSSplendidBarView.h */,
-				6A10FEB21A2AF97900F2F8EA /* MSSplendidBarView.m */,
-				6ACF06291A26642100032FB9 /* MSStatusBarCell.h */,
-				6ACF062A1A26642100032FB9 /* MSStatusBarCell.m */,
-				6ACF06261A25B4C100032FB9 /* MSTabModel.h */,
-				6ACF06271A25B4C100032FB9 /* MSTabModel.m */,
-				6ACF06231A2552B900032FB9 /* MSTabStyle.h */,
-				6ACF06241A2552B900032FB9 /* MSTabStyle.m */,
-				6A07EBE01A20700D000D3ED9 /* MSURLView.h */,
-				6A07EBE11A20700D000D3ED9 /* MSURLView.m */,
-				6A8C76EE1A0C2C83000925F5 /* MSView.h */,
-				6A8C76EF1A0C2C83000925F5 /* MSView.mm */,
+				6AC160F31A2C1734005CD0D3 /* Source */,
 				6A8C76CF1A0C06EE000925F5 /* MainMenu.xib */,
 				6A4B3F861A2A7C350008B45A /* BookmarksHistoryModel.xcdatamodeld */,
 				6ACF062C1A268AD800032FB9 /* ServoLibrarySelectionHelp.rtf */,
@@ -818,6 +809,44 @@
 				6A8C76E11A0C06EE000925F5 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6AC160F31A2C1734005CD0D3 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				6A8C76CC1A0C06EE000925F5 /* MSAppDelegate.h */,
+				6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */,
+				6AC160EB1A2BA8DF005CD0D3 /* MSBookmarkOrHistoryEntry.h */,
+				6A4B3F8F1A2A7E4B0008B45A /* MSBookmark.h */,
+				6A4B3F901A2A7E4B0008B45A /* MSBookmark.m */,
+				6A4B3F951A2AA76D0008B45A /* MSBookmarksListView.h */,
+				6A4B3F961A2AA76D0008B45A /* MSBookmarksListView.mm */,
+				6A8C78241A0C40C6000925F5 /* MSCEFClient.h */,
+				6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */,
+				6A4B3F921A2A994B0008B45A /* MSHistoryEntry.h */,
+				6A4B3F931A2A994B0008B45A /* MSHistoryEntry.m */,
+				6A10FEAE1A2AE45300F2F8EA /* MSSearchResultCell.h */,
+				6A10FEAF1A2AE45300F2F8EA /* MSSearchResultCell.m */,
+				6AC160F01A2BFD5C005CD0D3 /* MSSplendidBarResultView.h */,
+				6AC160F11A2BFD5C005CD0D3 /* MSSplendidBarResultView.m */,
+				6A10FEB11A2AF97900F2F8EA /* MSSplendidBarView.h */,
+				6A10FEB21A2AF97900F2F8EA /* MSSplendidBarView.m */,
+				6ACF06291A26642100032FB9 /* MSStatusBarCell.h */,
+				6ACF062A1A26642100032FB9 /* MSStatusBarCell.m */,
+				6ACF06261A25B4C100032FB9 /* MSTabModel.h */,
+				6ACF06271A25B4C100032FB9 /* MSTabModel.m */,
+				6ACF06231A2552B900032FB9 /* MSTabStyle.h */,
+				6ACF06241A2552B900032FB9 /* MSTabStyle.m */,
+				6AC160F41A2C176F005CD0D3 /* MSURLField.h */,
+				6AC160F51A2C176F005CD0D3 /* MSURLField.m */,
+				6A07EBE01A20700D000D3ED9 /* MSURLView.h */,
+				6A07EBE11A20700D000D3ED9 /* MSURLView.m */,
+				6A8C76EE1A0C2C83000925F5 /* MSView.h */,
+				6A8C76EF1A0C2C83000925F5 /* MSView.mm */,
+				6AC160E81A2BA5F9005CD0D3 /* NSString+MSStringAdditions.h */,
+				6AC160E91A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm */,
+			);
+			name = Source;
 			sourceTree = "<group>";
 		};
 		6ACF05FF1A2525F200032FB9 /* Products */ = {
@@ -985,6 +1014,7 @@
 				6A1EAB981A1FE3B6005D6A3E /* display_handler_cpptoc.cc in Sources */,
 				6A1EAB8C1A1FE3B6005D6A3E /* cef_string16.cc in Sources */,
 				6ACF061F1A2545E200032FB9 /* INAppStoreWindowSwizzling.c in Sources */,
+				6AC160F61A2C176F005CD0D3 /* MSURLField.m in Sources */,
 				6A8C76F21A0C2F97000925F5 /* MSAppDelegate.mm in Sources */,
 				6A1EAB851A1FE3B6005D6A3E /* cef_bind_helpers.cc in Sources */,
 				6A1EAB8A1A1FE3B6005D6A3E /* cef_logging.cc in Sources */,
@@ -1015,6 +1045,7 @@
 				6A1EABA11A1FE3B6005D6A3E /* keyboard_handler_cpptoc.cc in Sources */,
 				6A1EABA71A1FE3B6005D6A3E /* render_process_handler_cpptoc.cc in Sources */,
 				6A1EABAA1A1FE3B6005D6A3E /* resource_bundle_handler_cpptoc.cc in Sources */,
+				6AC160EA1A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm in Sources */,
 				6A4B3F941A2A994B0008B45A /* MSHistoryEntry.m in Sources */,
 				6A1EABB61A1FE3B6005D6A3E /* allow_certificate_error_callback_ctocpp.cc in Sources */,
 				6A1EAB871A1FE3B6005D6A3E /* cef_callback_internal.cc in Sources */,
@@ -1053,6 +1084,7 @@
 				6A1EABC01A1FE3B6005D6A3E /* dictionary_value_ctocpp.cc in Sources */,
 				6A4B3F911A2A7E4B0008B45A /* MSBookmark.m in Sources */,
 				6A1EABA51A1FE3B6005D6A3E /* read_handler_cpptoc.cc in Sources */,
+				6AC160F21A2BFD5C005CD0D3 /* MSSplendidBarResultView.m in Sources */,
 				6A1EABB81A1FE3B6005D6A3E /* before_download_callback_ctocpp.cc in Sources */,
 				6A1EABAE1A1FE3B6005D6A3E /* string_visitor_cpptoc.cc in Sources */,
 				6A1EABBB1A1FE3B6005D6A3E /* browser_host_ctocpp.cc in Sources */,
@@ -1242,6 +1274,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/pcwalton/Source/cef_binary_3.2171.1879_macosx64/Debug,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MiniServo/MiniServo-Prefix.pch";
@@ -1273,6 +1306,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/pcwalton/Source/cef_binary_3.2171.1879_macosx64/Debug,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework/Versions/A/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MiniServo/MiniServo-Prefix.pch";

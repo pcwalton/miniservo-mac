@@ -21,6 +21,7 @@
                 <outlet property="bookmarksMenu" destination="R7i-iK-bLR" id="uCv-HQ-k8W"/>
                 <outlet property="bookmarksPopoverView" destination="9hK-bz-z6A" id="oJt-oQ-8EF"/>
                 <outlet property="browserView" destination="9Jh-FK-B0G" id="X6K-xk-mRP"/>
+                <outlet property="historyMenu" destination="lVg-9m-Pbm" id="Fwv-de-zDy"/>
                 <outlet property="renderingThreadsView" destination="KmU-pG-Tct" id="99g-LK-jQ9"/>
                 <outlet property="splendidBarSearchResultsSectionView" destination="RB0-tl-HNV" id="uLY-z4-pdx"/>
                 <outlet property="splendidBarSearchResultsView" destination="jMt-7w-IJL" id="1qG-Fu-eut"/>
@@ -66,6 +67,13 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="dBv-Cz-kze"/>
+                            <menuItem title="Reset MiniServo…" id="75U-Xq-Ma5">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="resetBrowser:" target="Voe-Tx-rLC" id="5ea-gg-NGX"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="wgA-fk-u1g"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
@@ -600,7 +608,7 @@
                         </button>
                     </subviews>
                 </customView>
-                <textField focusRingType="none" verticalHuggingPriority="750" id="jP8-vH-xB8">
+                <textField focusRingType="none" verticalHuggingPriority="750" id="jP8-vH-xB8" customClass="MSURLField">
                     <rect key="frame" x="165" y="11" width="284" height="18"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" focusRingType="none" placeholderString="Search or enter address" allowsEditingTextAttributes="YES" id="ZwR-8Z-Udv">
@@ -608,6 +616,9 @@
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <outlet property="urlFieldDelegate" destination="Voe-Tx-rLC" id="sAS-MJ-niS"/>
+                    </connections>
                 </textField>
             </subviews>
         </customView>
@@ -735,7 +746,7 @@
                 </scrollView>
             </subviews>
         </customView>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="aPg-Tq-ATv" userLabel="Splendid Bar">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="aPg-Tq-ATv" userLabel="Splendid Bar">
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="207" width="500" height="200"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
@@ -769,6 +780,26 @@
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView id="76X-jR-oqY">
+                                                    <rect key="frame" x="1" y="1" width="497" height="17"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="NKS-Hc-JrV">
+                                                            <rect key="frame" x="0.0" y="0.0" width="497" height="17"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="89L-Pf-J70">
+                                                                <font key="font" metaFont="system"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="NKS-Hc-JrV" id="Otk-ZX-vZx"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
                                         </tableColumn>
                                     </tableColumns>
                                 </tableView>

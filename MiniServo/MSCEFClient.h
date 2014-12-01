@@ -29,7 +29,10 @@ public:
     virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                       bool isLoading,
                                       bool canGoBack,
-                                      bool canGoForward);
+                                      bool canGoForward) override;
+    virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                           CefRefPtr<CefFrame> frame,
+                           int httpStatusCode) override;
                         
     // CefRenderHandler implementation
     virtual bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect) override;

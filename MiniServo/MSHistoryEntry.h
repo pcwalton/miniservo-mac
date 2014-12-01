@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "MSBookmarkOrHistoryEntry.h"
 
-
-@interface MSHistoryEntry : NSManagedObject
+@interface MSHistoryEntry : NSManagedObject <MSBookmarkOrHistoryEntry>
 
 @property (nonatomic, retain) NSString * url;
 @property (nonatomic, retain) NSString * title;
+@property (nonatomic, retain) NSDate * date;
 
 @end

@@ -8,12 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 #import <MMTabBarView/MMTabBarView.h>
+#include <SearchKit/SearchKit.h>
 #include <include/cef_app.h>
 #include <include/cef_base.h>
 #import "INAppStoreWindow.h"
 
-#define INITIAL_URL "http://asdf.com/"
+#define MS_HISTORY_BOOKMARKS_AUTOCOMPLETE_SIZE 4
 
+#define MS_INITIAL_URL "http://asdf.com/"
+
+@class MSURLField;
 @class MSView;
 
 class CefBrowser;
@@ -30,6 +34,9 @@ class MSCEFClient;
     NSManagedObjectModel *mManagedObjectModel;
     NSPersistentStoreCoordinator *mPersistentStoreCoordinator;
     NSPopover *mBookmarksPopover;
+    NSMutableArray *mSplendidBarHistoryAndBookmarkEntryViews;
+    
+    SKIndexRef mSearchIndex;
     BOOL mDoingWork;
 }
 
@@ -56,6 +63,7 @@ class MSCEFClient;
 @property (assign) IBOutlet NSView *splendidBarSearchResultsSectionView;
 @property (assign) IBOutlet NSTextView *splendidBarSearchResultsView;
 @property (assign) IBOutlet NSView *urlBarContainer;
+@property (assign) IBOutlet NSMenu *historyMenu;
 @property (strong) NSManagedObjectContext *managedObjectContext;
 
 + (NSString *)URLEncode:(NSString *)query;
@@ -71,6 +79,7 @@ class MSCEFClient;
 - (IBAction)bookmarkCurrentPageOrShowBookmarksPopover:(id)sender;
 - (IBAction)bookmarkCurrentPage:(id)sender;
 - (IBAction)reportBug:(id)sender;
+- (IBAction)resetBrowser:(id)sender;
 - (void)controlTextDidEndEditing:(NSNotification *)notification;
 - (void)showBookmarksPopover;
 - (void)updateZoomMenuItems;
@@ -87,7 +96,7 @@ class MSCEFClient;
 - (void)updateNavigationState:(id)unused;
 - (void)pinchZoom:(CGFloat)zoomLevel;
 - (void)initializeCompositing;
-- (void)bookmarksMenuDidOpen:(id)unused;
+- (void)menuDidOpen:(NSNotification *)notification;
 - (void)navigateToBookmark:(id)sender;
 - (void)navigateToURL:(NSURL *)url;
 - (void)populateBookmarksMenu:(id)unused;
@@ -99,5 +108,7 @@ class MSCEFClient;
 - (void)textView:(NSTextView *)textView
    clickedOnCell:(id<NSTextAttachmentCell>)cell
           inRect:(NSRect)cellFrame;
+- (void)addHistoryEntryForMainFrame:(id)unused;
+- (void)performSplendidBarSearch:(NSDictionary *)originalSearchInfo;
 
 @end

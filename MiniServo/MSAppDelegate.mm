@@ -9,11 +9,16 @@
 #import "MSAppDelegate.h"
 #import "MSBookmark.h"
 #import "MSCEFClient.h"
+#import "MSHistoryEntry.h"
 #import "MSSearchResultCell.h"
+#import "MSSplendidBarResultView.h"
 #import "MSTabModel.h"
 #import "MSTabStyle.h"
+#import "MSURLField.h"
 #import "MSView.h"
+#import "NSString+MSStringAdditions.h"
 #import <MMTabBarView/MMAttachedTabBarButton.h>
+#include <SearchKit/SearchKit.h>
 #include <include/cef_app.h>
 #include <include/cef_base.h>
 #include <include/cef_browser.h>
@@ -28,14 +33,22 @@
 #define BOOKMARK_SEGMENT        0
 #define SHOW_BOOKMARKS_SEGMENT  1
 
-#define BOOKMARKS_TAG   0xb00c
+#define BOOKMARKS_TAG       0xb00c
+#define HISTORY_MENU_SIZE   15
+
+#define SPLENDID_BAR_TOP_SPACING    3.0
+#define SPLENDID_BAR_ROW_HEIGHT     40.0
 
 #define SEARCH_AUTOCOMPLETE_URL \
     @"http://suggestqueries.google.com/complete/search?client=firefox&q=${QUERY}"
 #define SEARCH_URL @"http://google.com/search?q=${QUERY}"
 #define REPORT_BUG_URL  @"http://github.com/servo/servo/issues"
 
-#define SPLENDID_BAR_TOP_SPACING    3.0
+// http://boredzo.org/blog/archives/2007-05-22/virtual-key-codes
+#define KEY_CODE_LEFT   123
+#define KEY_CODE_RIGHT  124
+#define KEY_CODE_DOWN   125
+#define KEY_CODE_UP     126
 
 @implementation MSAppDelegate
 
@@ -92,7 +105,7 @@
 
     // Register notifications.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(bookmarksMenuDidOpen:)
+                                             selector:@selector(menuDidOpen:)
                                                  name:NSMenuDidBeginTrackingNotification
                                                object:nil];
     
@@ -124,68 +137,14 @@
     // Set up the popover.
     mBookmarksPopover = nil;
     
-    // Create the Application Support directory if necessary.
-    NSArray *applicationSupportDirectory =
-        [[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory
-                                               inDomains:NSUserDomainMask];
-    NSURL *miniServoApplicationSupportDirectory =
-        [[applicationSupportDirectory objectAtIndex:0]
-         URLByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
-    [[NSFileManager defaultManager] createDirectoryAtURL:miniServoApplicationSupportDirectory
-                             withIntermediateDirectories:YES
-                                              attributes:nil
-                                                   error:nil];
+    // Set up the Splendid Bar.
+    mSplendidBarHistoryAndBookmarkEntryViews = [[NSMutableArray alloc] init];
+    for (NSUInteger i = 0; i < MS_HISTORY_BOOKMARKS_AUTOCOMPLETE_SIZE; i++)
+        [mSplendidBarHistoryAndBookmarkEntryViews addObject:[NSNull null]];
     
-    // Set up Core Data.
-    self.managedObjectContext = [[NSManagedObjectContext alloc] init];
-    mManagedObjectModel =
-        [[NSManagedObjectModel alloc] initWithContentsOfURL:
-         [[NSBundle mainBundle] URLForResource:@"BookmarksHistoryModel"
-                                 withExtension:@"momd"]];
-    mPersistentStoreCoordinator =
-        [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mManagedObjectModel];
-    [mPersistentStoreCoordinator
-     addPersistentStoreWithType:NSSQLiteStoreType
-                  configuration:nil
-                            URL:[miniServoApplicationSupportDirectory URLByAppendingPathComponent:@"BookmarksHistory.sqlite"]
-                        options:nil
-                          error:nil];
-    self.managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
-
-    // Set up preferences.
-    int hyperthreadCount;
-    size_t hyperthreadCountSize = sizeof(hyperthreadCount);
-    sysctlbyname("hw.ncpu", &hyperthreadCount, &hyperthreadCountSize, nullptr, 0);
-    for (int i = 1; i <= hyperthreadCount; i++)
-        [self.renderingThreadsView addItemWithObjectValue:[NSNumber numberWithInt: i]];
-    
-    NSProgressIndicator *indicator = [[self.tabBar lastAttachedButton] indicator];
-    [indicator setAutoresizingMask: NSViewNotSizable];
-    [indicator setFrameSize:NSMakeSize(5.0, 5.0)];
-
-    while (true) {
-        NSString *frameworkPath =
-        [[NSUserDefaults standardUserDefaults] stringForKey: @"ServoFrameworkPath"];
-        if (frameworkPath != nil && [frameworkPath length] > 0) {
-            if (dlopen([frameworkPath cStringUsingEncoding:NSUTF8StringEncoding],
-                       RTLD_LAZY) == nullptr) {
-                NSRunAlertPanel(@"Failed to open Servo library.",
-                                @"%s",
-                                @"OK",
-                                nil,
-                                nil,
-                                dlerror());
-            } else {
-                break;
-            }
-        }
-
-        NSString *newFrameworkPath = [self promptForNewFrameworkPath];
-        if (newFrameworkPath == nil)
-            exit(0);
-        [[NSUserDefaults standardUserDefaults] setObject: newFrameworkPath
-                                                  forKey: @"ServoFrameworkPath"];
-    }
+    // Initialize data stores and preferences.
+    [self reinitializeDataStores];
+    [self reinitializePreferences];
     
     NSArray *arguments = [[NSProcessInfo processInfo] arguments];
     char **cArguments = new char *[[arguments count]];
@@ -204,7 +163,11 @@
     CefWindowInfo windowInfo;
     windowInfo.SetAsWindowless([self browserView], false);
     CefBrowserSettings browserSettings;
-    mBrowser = CefBrowserHost::CreateBrowserSync(windowInfo, mCEFClient, INITIAL_URL, browserSettings, nullptr);
+    mBrowser = CefBrowserHost::CreateBrowserSync(windowInfo,
+                                                 mCEFClient,
+                                                 MS_INITIAL_URL,
+                                                 browserSettings,
+                                                 nullptr);
 
     [self.browserView initializeCompositing];
     [self updateZoomMenuItems];
@@ -220,6 +183,28 @@
         [self performSelectorOnMainThread:@selector(closePopoversIfNecessary:)
                                withObject:event
                             waitUntilDone:NO];
+        return event;
+    }];
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask
+                                          handler:^(NSEvent* event) {
+        if ([event keyCode] == KEY_CODE_LEFT && ([event modifierFlags] & NSCommandKeyMask)) {
+            [self performSelectorOnMainThread:@selector(goBack:)
+                                   withObject:self
+                                waitUntilDone:NO];
+            return event;
+        }
+        if ([event keyCode] == KEY_CODE_RIGHT && ([event modifierFlags] & NSCommandKeyMask)) {
+            [self performSelectorOnMainThread:@selector(goForward:)
+                                   withObject:self
+                                waitUntilDone:NO];
+            return event;
+        }
+        if ([event keyCode] == KEY_CODE_DOWN || [event keyCode] == KEY_CODE_UP) {
+            [self performSelectorOnMainThread:@selector(arrowKeyDown:)
+                                   withObject:event
+                                waitUntilDone:NO];
+            return event;
+        }
         return event;
     }];
 }
@@ -305,7 +290,10 @@
 }
 
 - (void)asynchronouslyUpdateSplendidBar {
-    NSString *escapedQuery = [MSAppDelegate URLEncode:[self.urlBar stringValue]];
+    NSString *query = [self.urlBar stringValue];
+    
+    // Start updating search autocomplete suggestions.
+    NSString *escapedQuery = [MSAppDelegate URLEncode:query];
     NSURL *url = [[NSURL alloc] initWithString:
                   [SEARCH_AUTOCOMPLETE_URL stringByReplacingOccurrencesOfString:@"${QUERY}"
                                                                      withString:escapedQuery]];
@@ -319,6 +307,9 @@
                                    return;
                                [self updateSplendidBarWithSearchAutocompleteData:data];
                            }];
+    
+    // Start updating history/bookmarks.
+    [self performSelectorInBackground:@selector(performSplendidBarSearch:) withObject:query];
 }
 
 - (void)updateSplendidBarWithSearchAutocompleteData:(NSData *)data {
@@ -341,25 +332,20 @@
     }
 
     [self.splendidBarTableView beginUpdates];
-    if ([self.splendidBarTableView numberOfRows] > 1) {
-        [self.splendidBarTableView removeRowsAtIndexes:
-         [NSIndexSet indexSetWithIndexesInRange:
-          NSMakeRange(1, [self.splendidBarTableView numberOfRows])]
-                                         withAnimation:NSTableViewAnimationEffectFade];
-    }
     if ([self.splendidBarTableView numberOfRows] == 0) {
         [self.splendidBarTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0]
                                          withAnimation:NSTableViewAnimationEffectFade];
     }
     [self.splendidBarTableView endUpdates];
-    [self.splendidBarTableView viewAtColumn:0 row:0 makeIfNecessary:YES];
 }
 
 - (NSView *)tableView:(NSTableView *)tableView
    viewForTableColumn:(NSTableColumn *)tableColumn
                   row:(NSInteger)row {
-    if (row == 0)
+    if (row == [tableView numberOfRows] - 1)
         return self.splendidBarSearchResultsSectionView;
+    if (row < [mSplendidBarHistoryAndBookmarkEntryViews count])
+        return [mSplendidBarHistoryAndBookmarkEntryViews objectAtIndex:row];
     return nil;
 }
 
@@ -376,6 +362,8 @@
         string = [@"http://" stringByAppendingString:string];
         url = [NSURL URLWithString:string];
     }
+
+    [self.splendidBarWindow orderOut:self];
     [self navigateToURL:url];
 }
 
@@ -498,12 +486,9 @@
     if ([self.window firstResponder] != self.urlBar || [[self.urlBar stringValue] length] == 0) {
         CefRefPtr<CefFrame> frame = mBrowser->GetMainFrame();
         if (frame != nullptr) {
-            CefString url = mBrowser->GetMainFrame()->GetURL();
-            NSString *nsURL = [[NSString alloc] initWithBytes:url.c_str()
-                                                       length:url.length() * 2
-                                                     encoding:NSUTF16LittleEndianStringEncoding];
-            if (nsURL != nil && [nsURL length] > 0)
-                [self setDisplayedURL:nsURL];
+            NSString *url = [NSString stringWithCEFString: mBrowser->GetMainFrame()->GetURL()];
+            if (url != nil && [url length] > 0)
+                [self setDisplayedURL:url];
         }
     }
 }
@@ -553,10 +538,7 @@
          [NSEntityDescription entityForName:@"MSBookmark"
                      inManagedObjectContext:self.managedObjectContext]
             insertIntoManagedObjectContext:self.managedObjectContext];
-    CefString cefURL = mBrowser->GetMainFrame()->GetURL();
-    NSString *url = [[NSString alloc] initWithBytes:cefURL.c_str()
-                                             length:cefURL.length() * 2
-                                           encoding:NSUTF16LittleEndianStringEncoding];
+    NSString *url = [NSString stringWithCEFString:mBrowser->GetMainFrame()->GetURL()];
     bookmark.url = url;
     bookmark.title = url;
     [self.managedObjectContext save:nil];
@@ -572,7 +554,10 @@
                             preferredEdge:NSMaxYEdge];
 }
 
-- (void)bookmarksMenuDidOpen:(id)unused {
+- (void)menuDidOpen:(NSNotification *)notification {
+    // FIXME(pcwalton): This is pretty coarse grained. Can we be lazier and only populate the menu
+    // that the user selected?
+    [self performSelectorInBackground:@selector(populateHistoryMenu:) withObject:nil];
     [self performSelectorInBackground:@selector(populateBookmarksMenu:) withObject:nil];
 }
 
@@ -592,28 +577,58 @@
                         waitUntilDone:NO];
 }
 
+- (void)populateHistoryMenu:(id)unused {
+    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] init];
+    managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"MSHistoryEntry"
+                                        inManagedObjectContext:managedObjectContext]];
+    [fetchRequest setFetchLimit:HISTORY_MENU_SIZE];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:
+                                      [NSSortDescriptor sortDescriptorWithKey:@"date"
+                                                                    ascending:NO]]];
+    NSArray *historyEntries = [managedObjectContext executeFetchRequest:fetchRequest
+                                                                  error:nil];
+    NSMutableArray *historyEntryIDs = [[NSMutableArray alloc] init];
+    for (MSHistoryEntry *historyEntry in historyEntries)
+        [historyEntryIDs addObject:[historyEntry objectID]];
+    [self performSelectorOnMainThread:@selector(replaceHistoryMenuItemsWith:)
+                           withObject:historyEntryIDs
+                        waitUntilDone:NO];
+}
+
 - (void)replaceBookmarkMenuItemsWith:(NSArray *)bookmarkIDs {
+    [self replaceBookmarkOrHistoryItemsInMenu:self.bookmarksMenu withItemIDs:bookmarkIDs];
+}
+
+- (void)replaceHistoryMenuItemsWith:(NSArray *)historyEntryIDs {
+    [self replaceBookmarkOrHistoryItemsInMenu:self.historyMenu withItemIDs:historyEntryIDs];
+}
+
+- (void)replaceBookmarkOrHistoryItemsInMenu:(NSMenu *)menu withItemIDs:(NSArray *)itemIDs {
     while (YES) {
-        NSMenuItem *menuItemToDelete = [self.bookmarksMenu itemWithTag:BOOKMARKS_TAG];
+        NSMenuItem *menuItemToDelete = [menu itemWithTag:BOOKMARKS_TAG];
         if (menuItemToDelete == nil)
             break;
-        [self.bookmarksMenu removeItem:menuItemToDelete];
+        [menu removeItem:menuItemToDelete];
     }
     
-    if ([bookmarkIDs count] > 0) {
+    if ([itemIDs count] > 0) {
         NSMenuItem *separator = [NSMenuItem separatorItem];
         [separator setTag:BOOKMARKS_TAG];
-        [self.bookmarksMenu addItem:separator];
+        [menu addItem:separator];
     }
-    for (NSManagedObjectID *bookmarkID in bookmarkIDs) {
-        MSBookmark *bookmark = (MSBookmark *)[self.managedObjectContext objectWithID:bookmarkID];
-        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:bookmark.title
+    for (NSManagedObjectID *itemID in itemIDs) {
+        id<MSBookmarkOrHistoryEntry> item =
+            (id<MSBookmarkOrHistoryEntry>)[self.managedObjectContext objectWithID:itemID];
+        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:item.title
                                                           action:@selector(navigateToBookmark:)
                                                    keyEquivalent:@""];
         [menuItem setTag:BOOKMARKS_TAG];
         [menuItem setTarget:self];
-        [menuItem setRepresentedObject:bookmark.url];
-        [self.bookmarksMenu addItem:menuItem];
+        [menuItem setRepresentedObject:item.url];
+        [menuItem setImage:[[NSBundle mainBundle] imageForResource:@"DefaultFavIcon"]];
+        [menu addItem:menuItem];
     }
 }
 
@@ -669,6 +684,332 @@
     [self navigateToURL:[NSURL URLWithString:
                          [SEARCH_URL stringByReplacingOccurrencesOfString:@"${QUERY}"
                                                                withString:escapedQuery]]];
+}
+
+- (void)addHistoryEntryForMainFrame:(id)unused {
+    // Add the history entry to Core Data.
+    MSHistoryEntry *entry =
+    [[MSHistoryEntry alloc] initWithEntity:
+            [NSEntityDescription entityForName:@"MSHistoryEntry"
+                        inManagedObjectContext:self.managedObjectContext]
+            insertIntoManagedObjectContext:self.managedObjectContext];
+    entry.url = [NSString stringWithCEFString:mBrowser->GetMainFrame()->GetURL()];
+    entry.title = entry.url;
+    entry.date = [NSDate date];
+    [self.managedObjectContext save:nil];
+    
+    // Add the history entry to the search index.
+    SKDocumentRef document =
+        SKDocumentCreateWithURL((__bridge CFURLRef)[NSURL URLWithString:entry.url]);
+    SKIndexAddDocumentWithText(mSearchIndex,
+                               document,
+                               (__bridge CFStringRef)[NSString stringWithFormat:@"%@ %@",
+                                                      entry.url,
+                                                      entry.title],
+                               true);
+    CFDictionaryRef existingProperties = SKIndexCopyDocumentProperties(mSearchIndex, document);
+    NSMutableDictionary *properties;
+    if (existingProperties == nullptr) {
+        properties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSArray array],
+                      @"visits",
+                      nil];
+    } else {
+        properties = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary *)existingProperties];
+    }
+    [properties setObject:entry.title forKey:@"title"];
+    [properties setObject:[[properties objectForKey:@"visits"] arrayByAddingObject:entry.date]
+                   forKey:@"visits"];
+    SKIndexSetDocumentProperties(mSearchIndex, document, (__bridge CFDictionaryRef)properties);
+}
+
+- (void)performSplendidBarSearch:(NSString *)query {
+    SKIndexFlush(mSearchIndex);
+    
+    NSMutableCharacterSet *separators = [NSMutableCharacterSet punctuationCharacterSet];
+    [separators formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSArray *words = [query componentsSeparatedByCharactersInSet:separators];
+    NSMutableString *searchQuery = [[NSMutableString alloc] init];
+    BOOL first = YES;
+    for (NSString *word in words) {
+        if (!first)
+            [searchQuery appendString:@" | "];
+        else
+            first = NO;
+        [searchQuery appendFormat:@"%@*", word];
+    }
+    SKSearchRef search = SKSearchCreate(mSearchIndex, (__bridge CFStringRef)searchQuery, 0);
+
+    NSUInteger totalSearchResultsFound = 0;
+    SKDocumentID searchResultDocuments[MS_HISTORY_BOOKMARKS_AUTOCOMPLETE_SIZE];
+    float searchResultScores[MS_HISTORY_BOOKMARKS_AUTOCOMPLETE_SIZE];
+    Boolean stillGoing;
+    do {
+        CFIndex searchResultsFoundThisRound;
+        stillGoing =
+            SKSearchFindMatches(search,
+                                MS_HISTORY_BOOKMARKS_AUTOCOMPLETE_SIZE - totalSearchResultsFound,
+                                searchResultDocuments,
+                                searchResultScores,
+                                0,
+                                &searchResultsFoundThisRound);
+        if (searchResultsFoundThisRound > 0) {
+            NSMutableArray *documents = [[NSMutableArray alloc] init];
+            for (NSUInteger i = 0; i < searchResultsFoundThisRound; i++)
+                [documents addObject:[NSNumber numberWithLong:searchResultDocuments[i]]];
+            NSDictionary *splendidBarUpdateInfo =
+            [NSDictionary dictionaryWithObjectsAndKeys:documents,
+             @"documents",
+             [NSNumber numberWithUnsignedInteger:totalSearchResultsFound],
+             @"searchResultLocation",
+             [NSNumber numberWithUnsignedInteger:searchResultsFoundThisRound],
+             @"searchResultLength",
+             nil];
+            [self performSelectorOnMainThread:@selector(updateSplendidBarWithHistoryAndBookmarkInfo:)
+                                   withObject:splendidBarUpdateInfo
+                                waitUntilDone:NO];
+        }
+        totalSearchResultsFound += searchResultsFoundThisRound;
+    } while (stillGoing);
+}
+
+- (void)updateSplendidBarWithHistoryAndBookmarkInfo:(NSDictionary *)info {
+    NSArray *documents = (NSArray *)[info objectForKey:@"documents"];
+    NSUInteger searchResultLocation =
+        [[info objectForKey:@"searchResultLocation"] unsignedIntegerValue];
+    NSUInteger searchResultLength =
+        [[info objectForKey:@"searchResultLength"] unsignedIntegerValue];
+    NSUInteger searchResultEnd = searchResultLocation + searchResultLength;
+    
+    for (NSUInteger i = searchResultLocation; i < searchResultEnd; i++)
+        [mSplendidBarHistoryAndBookmarkEntryViews replaceObjectAtIndex:i withObject:[NSNull null]];
+    
+    NSUInteger i = searchResultLocation;
+    for (NSNumber *cocoaDocumentID in documents) {
+        SKDocumentID documentID = [cocoaDocumentID longValue];
+        SKDocumentRef document = SKIndexCopyDocumentForDocumentID(mSearchIndex, documentID);
+        NSDictionary *properties =
+            (__bridge NSDictionary *)SKIndexCopyDocumentProperties(mSearchIndex, document);
+        MSSplendidBarResultView *resultView =
+            [[MSSplendidBarResultView alloc] initWithFrame:NSMakeRect(0.0,
+                                                                      200.0,
+                                                                      300.0,
+                                                                      SPLENDID_BAR_ROW_HEIGHT)];
+        [resultView setAutoresizingMask:NSViewWidthSizable];
+        [resultView setDrawsBackground:NO];
+        resultView.splendidBarResultDelegate = self;
+        resultView.representedObject = (__bridge NSURL *)SKDocumentCopyURL(document);
+        NSMutableAttributedString *resultText = [resultView textStorage];
+        [resultText replaceCharactersInRange:NSMakeRange(0, [resultText length]) withString:@""];
+        
+        // Set up formatting.
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.tabStops =
+        [NSArray arrayWithObjects:
+         [[NSTextTab alloc] initWithType:NSLeftTabStopType location:7.0],
+         [[NSTextTab alloc] initWithType:NSLeftTabStopType location:37.0],
+         nil];
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSFont systemFontOfSize:12.0],
+                                    NSFontAttributeName,
+                                    paragraphStyle,
+                                    NSParagraphStyleAttributeName,
+                                    nil];
+        
+        // Add the image.
+        [resultText appendAttributedString:[[NSAttributedString alloc] initWithString:@"\t"
+                                                                           attributes:attributes]];
+        NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+        NSTextAttachmentCell *imageAttachmentCell = [[NSTextAttachmentCell alloc] init];
+        [imageAttachmentCell setImage:[NSImage imageNamed:@"DefaultFavIcon"]];
+        [imageAttachment setAttachmentCell:imageAttachmentCell];
+        NSMutableAttributedString *attachmentString =
+        [[NSMutableAttributedString alloc] initWithAttributedString:
+         [NSAttributedString attributedStringWithAttachment:imageAttachment]];
+        [attachmentString addAttributes:attributes range:NSMakeRange(0, [attachmentString length])];
+        [resultText appendAttributedString:attachmentString];
+        
+        // Add the title.
+        [resultText appendAttributedString:[[NSAttributedString alloc] initWithString:@"\t"
+                                                                           attributes:attributes]];
+        [resultText appendAttributedString:
+         [[NSAttributedString alloc] initWithString:[properties objectForKey:@"title"]
+                                         attributes:attributes]];
+        
+        [mSplendidBarHistoryAndBookmarkEntryViews replaceObjectAtIndex:i withObject:resultView];
+        i++;
+    }
+
+    [self.splendidBarTableView reloadData];
+    [self.splendidBarTableView beginUpdates];
+    NSUInteger previousRowCount = [self.splendidBarTableView numberOfRows];
+    if (previousRowCount < searchResultEnd + 1) {
+        [self.splendidBarTableView insertRowsAtIndexes:
+         [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(previousRowCount, searchResultEnd + 1)]
+                                         withAnimation:NSTableViewAnimationEffectFade];
+    }
+    [self.splendidBarTableView endUpdates];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification {
+    SKIndexFlush(mSearchIndex);
+}
+
+- (void)resetBrowser:(id)sender {
+    if (NSRunAlertPanel(@"Are you sure you want to reset MiniServo?",
+                        @"Resetting MiniServo will clear history, bookmarks, and preferences. You "
+                          @"can't undo this operation.",
+                        @"OK",
+                        @"Cancel",
+                        nil) != NSOKButton) {
+        return;
+    }
+    
+    // Delete Core Data objects.
+    NSURL *miniServoApplicationSupportDirectory = [self getOrCreateApplicationSupportDirectory];
+    self.managedObjectContext = nil;
+    mManagedObjectModel = nil;
+    mPersistentStoreCoordinator = nil;
+    [[NSFileManager defaultManager] removeItemAtURL:
+     [miniServoApplicationSupportDirectory URLByAppendingPathComponent:@"BookmarksHistory.sqlite"]
+                                              error:nil];
+    
+    // Delete search index.
+    SKIndexClose(mSearchIndex);
+    mSearchIndex = nil;
+    [[NSFileManager defaultManager]
+     removeItemAtURL:[miniServoApplicationSupportDirectory
+                      URLByAppendingPathComponent:@"BookmarksHistory.skindex"]
+     error:nil];
+
+    // Delete preferences.
+    // http://stackoverflow.com/questions/8259786/cocoa-resetting-nsuserdefaults
+    NSDictionary *preferenceObjects =
+        [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    for (NSString *key in preferenceObjects)
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [self reinitializeDataStores];
+    [self reinitializePreferences];
+}
+
+- (NSURL *)getOrCreateApplicationSupportDirectory {
+    NSArray *applicationSupportDirectory =
+    [[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory
+                                           inDomains:NSUserDomainMask];
+    NSURL *miniServoApplicationSupportDirectory =
+    [[applicationSupportDirectory objectAtIndex:0]
+     URLByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
+    [[NSFileManager defaultManager] createDirectoryAtURL:miniServoApplicationSupportDirectory
+                             withIntermediateDirectories:YES
+                                              attributes:nil
+                                                   error:nil];
+    return miniServoApplicationSupportDirectory;
+}
+
+- (void)reinitializeDataStores {
+    NSURL *miniServoApplicationSupportDirectory = [self getOrCreateApplicationSupportDirectory];
+    
+    // Set up Core Data.
+    self.managedObjectContext = [[NSManagedObjectContext alloc] init];
+    mManagedObjectModel =
+    [[NSManagedObjectModel alloc] initWithContentsOfURL:
+     [[NSBundle mainBundle] URLForResource:@"BookmarksHistoryModel"
+                             withExtension:@"momd"]];
+    mPersistentStoreCoordinator =
+    [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mManagedObjectModel];
+    [mPersistentStoreCoordinator
+     addPersistentStoreWithType:NSSQLiteStoreType
+     configuration:nil
+     URL:[miniServoApplicationSupportDirectory URLByAppendingPathComponent:@"BookmarksHistory.sqlite"]
+     options:nil
+     error:nil];
+    self.managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
+    
+    // Set up Search Kit.
+    CFURLRef indexURL = (__bridge CFURLRef)[miniServoApplicationSupportDirectory URLByAppendingPathComponent:@"BookmarksHistory.skindex"];
+    mSearchIndex = SKIndexOpenWithURL(indexURL, CFSTR("BookmarksHistory"), true);
+    if (mSearchIndex == nullptr) {
+        mSearchIndex = SKIndexCreateWithURL(indexURL,
+                                            CFSTR("BookmarksHistory"),
+                                            kSKIndexInverted,
+                                            nullptr);
+    }
+
+}
+
+- (void)reinitializePreferences {
+    // Set up preferences.
+    int hyperthreadCount;
+    size_t hyperthreadCountSize = sizeof(hyperthreadCount);
+    sysctlbyname("hw.ncpu", &hyperthreadCount, &hyperthreadCountSize, nullptr, 0);
+    for (int i = 1; i <= hyperthreadCount; i++)
+        [self.renderingThreadsView addItemWithObjectValue:[NSNumber numberWithInt: i]];
+    
+    NSProgressIndicator *indicator = [[self.tabBar lastAttachedButton] indicator];
+    [indicator setAutoresizingMask: NSViewNotSizable];
+    [indicator setFrameSize:NSMakeSize(5.0, 5.0)];
+    
+    while (true) {
+        NSString *frameworkPath =
+        [[NSUserDefaults standardUserDefaults] stringForKey: @"ServoFrameworkPath"];
+        if (frameworkPath != nil && [frameworkPath length] > 0) {
+            if (dlopen([frameworkPath cStringUsingEncoding:NSUTF8StringEncoding],
+                       RTLD_LAZY) == nullptr) {
+                NSRunAlertPanel(@"Failed to open Servo library.",
+                                @"%s",
+                                @"OK",
+                                nil,
+                                nil,
+                                dlerror());
+            } else {
+                break;
+            }
+        }
+        
+        NSString *newFrameworkPath = [self promptForNewFrameworkPath];
+        if (newFrameworkPath == nil)
+            exit(0);
+        [[NSUserDefaults standardUserDefaults] setObject: newFrameworkPath
+                                                  forKey: @"ServoFrameworkPath"];
+    }
+}
+
+- (void)splendidBarResultViewReceivedClick:(MSSplendidBarResultView *)view {
+    [self navigateToURL:(NSURL *)view.representedObject];
+    [self.splendidBarWindow orderOut:self];
+}
+
+- (void)arrowKeyDown:(NSEvent *)event {
+    if (![self.window isKeyWindow])
+        return;
+    if ([self.window firstResponder] != [self.urlBar currentEditor])
+        return;
+    NSIndexSet *rowsToSelect;
+    NSUInteger selectedRow = [self.splendidBarTableView selectedRow];
+    if ([event keyCode] == KEY_CODE_DOWN) {
+        if (selectedRow == [self.splendidBarTableView numberOfRows] - 1)
+            rowsToSelect = [NSIndexSet indexSetWithIndex:selectedRow];
+        else
+            rowsToSelect = [NSIndexSet indexSetWithIndex:selectedRow + 1];
+    } else {
+        if (selectedRow == 0)
+            rowsToSelect = [NSIndexSet indexSet];
+        else
+            rowsToSelect = [NSIndexSet indexSetWithIndex:selectedRow - 1];
+    }
+    [self.splendidBarTableView selectRowIndexes:rowsToSelect byExtendingSelection:NO];
+    
+    NSView *view = [self.splendidBarTableView viewAtColumn:0
+                                                       row:[self.splendidBarTableView selectedRow]
+                                           makeIfNecessary:YES];
+    if (view == nil)
+        return;
+    if (![[view class] isSubclassOfClass:[MSSplendidBarResultView class]])
+        return;
+    NSURL *url = (NSURL *)((MSSplendidBarResultView *)view).representedObject;
+    [self setDisplayedURL:[url absoluteString]];
+    [self.urlBar selectText:self];
 }
 
 @end

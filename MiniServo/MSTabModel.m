@@ -18,4 +18,10 @@
     return self;
 }
 
+@dynamic icon;
+
+- (NSImage *)icon {
+    return nil;
+}
+
 @end
