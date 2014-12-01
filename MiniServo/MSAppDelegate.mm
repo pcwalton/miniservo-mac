@@ -36,7 +36,7 @@
 #define BOOKMARKS_TAG       0xb00c
 #define HISTORY_MENU_SIZE   15
 
-#define SPLENDID_BAR_TOP_SPACING    3.0
+#define SPLENDID_BAR_TOP_SPACING    0.0
 #define SPLENDID_BAR_ROW_HEIGHT     40.0
 
 #define SEARCH_AUTOCOMPLETE_URL \
@@ -647,7 +647,8 @@
 
 - (void)closePopoversIfNecessary:(NSEvent *)event {
     if (mBookmarksPopover != nil) {
-        NSPoint point = [self.bookmarksPopoverView convertPoint:[event locationInWindow] fromView:nil];
+        NSPoint point = [self.bookmarksPopoverView convertPoint:[event locationInWindow]
+                                                       fromView:nil];
         if (![self.bookmarksPopoverView mouse:point inRect:[self.bookmarksPopoverView bounds]]) {
             [mBookmarksPopover close];
             mBookmarksPopover = nil;
@@ -764,7 +765,8 @@
              [NSNumber numberWithUnsignedInteger:searchResultsFoundThisRound],
              @"searchResultLength",
              nil];
-            [self performSelectorOnMainThread:@selector(updateSplendidBarWithHistoryAndBookmarkInfo:)
+            [self performSelectorOnMainThread:
+             @selector(updateSplendidBarWithHistoryAndBookmarkInfo:)
                                    withObject:splendidBarUpdateInfo
                                 waitUntilDone:NO];
         }
@@ -921,7 +923,8 @@
     [mPersistentStoreCoordinator
      addPersistentStoreWithType:NSSQLiteStoreType
      configuration:nil
-     URL:[miniServoApplicationSupportDirectory URLByAppendingPathComponent:@"BookmarksHistory.sqlite"]
+     URL:[miniServoApplicationSupportDirectory URLByAppendingPathComponent:
+          @"BookmarksHistory.sqlite"]
      options:nil
      error:nil];
     self.managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
@@ -999,6 +1002,9 @@
             rowsToSelect = [NSIndexSet indexSetWithIndex:selectedRow - 1];
     }
     [self.splendidBarTableView selectRowIndexes:rowsToSelect byExtendingSelection:NO];
+    
+    if ([rowsToSelect firstIndex] == NSNotFound)
+        return;
     
     NSView *view = [self.splendidBarTableView viewAtColumn:0
                                                        row:[self.splendidBarTableView selectedRow]
