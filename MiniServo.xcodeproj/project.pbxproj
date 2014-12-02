@@ -135,7 +135,7 @@
 		6A8C76DB1A0C06EE000925F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A8C76BA1A0C06EE000925F5 /* Cocoa.framework */; };
 		6A8C76E31A0C06EE000925F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A8C76E11A0C06EE000925F5 /* InfoPlist.strings */; };
 		6A8C76E51A0C06EE000925F5 /* MiniServoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76E41A0C06EE000925F5 /* MiniServoTests.m */; };
-		6A8C76F01A0C2C83000925F5 /* MSView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76EF1A0C2C83000925F5 /* MSView.mm */; };
+		6A8C76F01A0C2C83000925F5 /* MSWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76EF1A0C2C83000925F5 /* MSWebView.mm */; };
 		6A8C76F21A0C2F97000925F5 /* MSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */; };
 		6A8C78251A0C40C6000925F5 /* MSCEFClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */; };
 		6AC160EA1A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6AC160E91A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm */; };
@@ -421,8 +421,8 @@
 		6A8C76E01A0C06EE000925F5 /* MiniServoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MiniServoTests-Info.plist"; sourceTree = "<group>"; };
 		6A8C76E21A0C06EE000925F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6A8C76E41A0C06EE000925F5 /* MiniServoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MiniServoTests.m; sourceTree = "<group>"; };
-		6A8C76EE1A0C2C83000925F5 /* MSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSView.h; sourceTree = "<group>"; };
-		6A8C76EF1A0C2C83000925F5 /* MSView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSView.mm; sourceTree = "<group>"; };
+		6A8C76EE1A0C2C83000925F5 /* MSWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWebView.h; sourceTree = "<group>"; };
+		6A8C76EF1A0C2C83000925F5 /* MSWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSWebView.mm; sourceTree = "<group>"; };
 		6A8C76F11A0C2F97000925F5 /* MSAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSAppDelegate.mm; sourceTree = "<group>"; };
 		6A8C78231A0C40C6000925F5 /* MSCEFClient.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MSCEFClient.mm; sourceTree = "<group>"; };
 		6A8C78241A0C40C6000925F5 /* MSCEFClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCEFClient.h; sourceTree = "<group>"; };
@@ -729,7 +729,6 @@
 			children = (
 				6ACF05FE1A2525F200032FB9 /* MMTabBarView.xcodeproj */,
 				6A8C76C01A0C06EE000925F5 /* MiniServo */,
-				6A8C76DE1A0C06EE000925F5 /* MiniServoTests */,
 				6A8C76B91A0C06EE000925F5 /* Frameworks */,
 				6A8C76B81A0C06EE000925F5 /* Products */,
 			);
@@ -784,6 +783,7 @@
 		6A8C76C11A0C06EE000925F5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6A8C76DE1A0C06EE000925F5 /* MiniServoTests */,
 				6A8C76C21A0C06EE000925F5 /* MiniServo-Info.plist */,
 				6A8C76C31A0C06EE000925F5 /* InfoPlist.strings */,
 				6A8C76C61A0C06EE000925F5 /* main.m */,
@@ -800,7 +800,7 @@
 				6A8C76DF1A0C06EE000925F5 /* Supporting Files */,
 			);
 			path = MiniServoTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		6A8C76DF1A0C06EE000925F5 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -841,8 +841,8 @@
 				6AC160F51A2C176F005CD0D3 /* MSURLField.m */,
 				6A07EBE01A20700D000D3ED9 /* MSURLView.h */,
 				6A07EBE11A20700D000D3ED9 /* MSURLView.m */,
-				6A8C76EE1A0C2C83000925F5 /* MSView.h */,
-				6A8C76EF1A0C2C83000925F5 /* MSView.mm */,
+				6A8C76EE1A0C2C83000925F5 /* MSWebView.h */,
+				6A8C76EF1A0C2C83000925F5 /* MSWebView.mm */,
 				6AC160E81A2BA5F9005CD0D3 /* NSString+MSStringAdditions.h */,
 				6AC160E91A2BA5F9005CD0D3 /* NSString+MSStringAdditions.mm */,
 			);
@@ -1124,7 +1124,7 @@
 				6A1EABAB1A1FE3B6005D6A3E /* resource_handler_cpptoc.cc in Sources */,
 				6A1EABE51A1FE3B6005D6A3E /* cef_closure_task.cc in Sources */,
 				6A1EABC11A1FE3B6005D6A3E /* domdocument_ctocpp.cc in Sources */,
-				6A8C76F01A0C2C83000925F5 /* MSView.mm in Sources */,
+				6A8C76F01A0C2C83000925F5 /* MSWebView.mm in Sources */,
 				6A1EABD71A1FE3B6005D6A3E /* stream_reader_ctocpp.cc in Sources */,
 				6ACF06281A25B4C100032FB9 /* MSTabModel.m in Sources */,
 				6A1EABE81A1FE3B6005D6A3E /* cef_xml_object.cc in Sources */,

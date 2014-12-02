@@ -20,7 +20,7 @@
                 <outlet property="bookmarksButtonArrayController" destination="m7q-FA-Ajd" id="32v-Br-9B1"/>
                 <outlet property="bookmarksMenu" destination="R7i-iK-bLR" id="uCv-HQ-k8W"/>
                 <outlet property="bookmarksPopoverView" destination="9hK-bz-z6A" id="oJt-oQ-8EF"/>
-                <outlet property="browserView" destination="9Jh-FK-B0G" id="X6K-xk-mRP"/>
+                <outlet property="browserView" destination="9Jh-FK-B0G" id="RFT-xV-Kiz"/>
                 <outlet property="historyMenu" destination="lVg-9m-Pbm" id="Fwv-de-zDy"/>
                 <outlet property="renderingThreadsView" destination="KmU-pG-Tct" id="99g-LK-jQ9"/>
                 <outlet property="splendidBarSearchResultsSectionView" destination="RB0-tl-HNV" id="uLY-z4-pdx"/>
@@ -453,7 +453,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="960" height="750"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView id="9Jh-FK-B0G" customClass="MSView">
+                    <customView id="9Jh-FK-B0G" customClass="MSWebView">
                         <rect key="frame" x="0.0" y="0.0" width="960" height="728"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </customView>

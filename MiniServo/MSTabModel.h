@@ -9,11 +9,17 @@
 #import <Foundation/Foundation.h>
 #import <MMTabBarView/MMTabBarItem.h>
 
+@class MSHistoryEntry;
+
 @interface MSTabModel : NSObject<MMTabBarItem> {
-    BOOL _isProcessing;
+    BOOL mIsProcessing;
+    NSString *mtitle;
+    MSHistoryEntry *mHistoryEntry;
 }
 
 @property (assign) BOOL isProcessing;
 @property (strong) NSImage *icon;
+@property (copy) NSString *title;
+@property (strong) MSHistoryEntry *historyEntry;
 
 @end

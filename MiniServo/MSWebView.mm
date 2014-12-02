@@ -1,5 +1,5 @@
 //
-//  MSView.m
+//  MSWebView.m
 //  MiniServo
 //
 //  Created by Patrick Walton on 11/6/14.
@@ -7,13 +7,13 @@
 //
 
 #import "MSAppDelegate.h"
-#import "MSView.h"
+#import "MSWebView.h"
 
 #include <CoreServices/CoreServices.h>
 #include <OpenGL/gl.h>
 #include <mach/mach_time.h>
 
-@implementation MSView
+@implementation MSWebView
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -124,8 +124,8 @@
     if (fabs(delta.x) <= 0.0 && fabs(delta.y) <= 0.0)
         return;
     
-    delta.x *= 30.0;
-    delta.y *= 30.0;
+    delta.x *= 25.0;
+    delta.y *= 25.0;
     
     NSPoint origin = [self convertPoint: [event locationInWindow] fromView:nil];
     origin.y = [self frame].size.height - origin.y;

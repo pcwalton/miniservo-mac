@@ -9,16 +9,17 @@
 #ifndef __MiniServo__MSCEFClient__
 #define __MiniServo__MSCEFClient__
 
-#import "MSView.h"
+#import "MSWebView.h"
 #include <include/cef_client.h>
 
 @class MSAppDelegate;
 
 class MSCEFClient : public CefClient,
                     public CefLoadHandler,
-                    public CefRenderHandler {
+                    public CefRenderHandler,
+                    public CefStringVisitor {
 public:
-    explicit MSCEFClient(MSAppDelegate* appDelegate, MSView* view)
+    explicit MSCEFClient(MSAppDelegate* appDelegate, MSWebView* view)
     : mAppDelegate(appDelegate), mView(view) {}
 
     // CefClient implementation
@@ -44,13 +45,16 @@ public:
                          int width,
                          int height) override;
     virtual void OnPresent(CefRefPtr<CefBrowser> browser) override;
+                        
+    // CefStringVisitor implementation (for tab titles)
+    virtual void Visit(const CefString& string) override;
 
 private:
     IMPLEMENT_REFCOUNTING(MSCEFClient);
     DISALLOW_COPY_AND_ASSIGN(MSCEFClient);
                         
     MSAppDelegate* mAppDelegate;
-    MSView* mView;
+    MSWebView* mView;
 };
 
 #endif /* defined(__MiniServo__MSCEFClient__) */

@@ -18,7 +18,7 @@
 #define MS_INITIAL_URL "http://asdf.com/"
 
 @class MSURLField;
-@class MSView;
+@class MSWebView;
 
 class CefBrowser;
 class MSCEFClient;
@@ -44,7 +44,7 @@ class MSCEFClient;
 @property (assign) IBOutlet NSSegmentedControl *backForwardButton;
 @property (assign) IBOutlet NSButton *stopReloadButton;
 @property (assign) IBOutlet NSTextField *urlBar;
-@property (assign) IBOutlet MSView *browserView;
+@property (assign) IBOutlet MSWebView *browserView;
 @property (assign) IBOutlet MMTabBarView *tabBar;
 @property (assign) IBOutlet NSTabView *tabView;
 @property (assign) IBOutlet NSView *titleBarView;
@@ -110,5 +110,8 @@ class MSCEFClient;
           inRect:(NSRect)cellFrame;
 - (void)addHistoryEntryForMainFrame:(id)unused;
 - (void)performSplendidBarSearch:(NSDictionary *)originalSearchInfo;
+- (void)setTabTitle:(NSDictionary *)info;
+- (void)determineBookmarkStateForURL:(NSURL *)url;
+- (void)updateBookmarkState:(NSNumber *)state;
 
 @end

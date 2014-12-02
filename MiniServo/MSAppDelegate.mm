@@ -15,7 +15,7 @@
 #import "MSTabModel.h"
 #import "MSTabStyle.h"
 #import "MSURLField.h"
-#import "MSView.h"
+#import "MSWebView.h"
 #import "NSString+MSStringAdditions.h"
 #import <MMTabBarView/MMAttachedTabBarButton.h>
 #include <SearchKit/SearchKit.h>
@@ -393,11 +393,12 @@
     if (host == nil)
         host = [[NSString alloc] init];
     [formattedURL appendAttributedString:
-     [[NSAttributedString alloc] initWithString:host
-                                     attributes:darkAttributes]];
+     [[NSAttributedString alloc] initWithString:host attributes:darkAttributes]];
+    NSString *path = [url path];
+    if (path == nil)
+        path = [[NSString alloc] init];
     [formattedURL appendAttributedString:
-     [[NSAttributedString alloc] initWithString:[url path]
-                                     attributes:dimmedAttributes]];
+     [[NSAttributedString alloc] initWithString:path attributes:dimmedAttributes]];
     [self.urlBar setAttributedStringValue: formattedURL];
 }
 
@@ -483,14 +484,19 @@
     //[self.backForwardButton setEnabled:canGoForward forSegment:FORWARD_SEGMENT];
     if (mBrowser == nullptr)
         return;
+    
+    CefRefPtr<CefFrame> frame = mBrowser->GetMainFrame();
+    if (frame == nullptr)
+        return;
+
+    NSString *url = [NSString stringWithCEFString: frame->GetURL()];
     if ([self.window firstResponder] != self.urlBar || [[self.urlBar stringValue] length] == 0) {
-        CefRefPtr<CefFrame> frame = mBrowser->GetMainFrame();
-        if (frame != nullptr) {
-            NSString *url = [NSString stringWithCEFString: mBrowser->GetMainFrame()->GetURL()];
-            if (url != nil && [url length] > 0)
-                [self setDisplayedURL:url];
-        }
+        if (url != nil && [url length] > 0)
+            [self setDisplayedURL:url];
     }
+    
+    frame->GetText(mCEFClient);
+    [self performSelectorInBackground:@selector(determineBookmarkStateForURL:) withObject:url];
 }
 
 - (void)initializeCompositing {
@@ -540,8 +546,12 @@
             insertIntoManagedObjectContext:self.managedObjectContext];
     NSString *url = [NSString stringWithCEFString:mBrowser->GetMainFrame()->GetURL()];
     bookmark.url = url;
-    bookmark.title = url;
+    bookmark.title = [self titleOfCurrentTab];
+    if (bookmark.title == nil)
+        bookmark.title = bookmark.url;
     [self.managedObjectContext save:nil];
+    
+    [self updateBookmarkState:[NSNumber numberWithBool:YES]];
 }
 
 - (void)showBookmarksPopover {
@@ -695,19 +705,20 @@
                         inManagedObjectContext:self.managedObjectContext]
             insertIntoManagedObjectContext:self.managedObjectContext];
     entry.url = [NSString stringWithCEFString:mBrowser->GetMainFrame()->GetURL()];
-    entry.title = entry.url;
+    entry.title = [self titleOfCurrentTab];
+    if (entry.title == nil)
+        entry.title = entry.url;
     entry.date = [NSDate date];
+    [self setHistoryEntryForCurrentTab:entry];
     [self.managedObjectContext save:nil];
     
     // Add the history entry to the search index.
     SKDocumentRef document =
         SKDocumentCreateWithURL((__bridge CFURLRef)[NSURL URLWithString:entry.url]);
-    SKIndexAddDocumentWithText(mSearchIndex,
-                               document,
-                               (__bridge CFStringRef)[NSString stringWithFormat:@"%@ %@",
-                                                      entry.url,
-                                                      entry.title],
-                               true);
+    NSString *documentText = [NSString stringWithFormat:@"%@ %@", entry.url, entry.title];
+    if (documentText == nil)
+        documentText = @"";
+    SKIndexAddDocumentWithText(mSearchIndex, document, (__bridge CFStringRef)documentText, true);
     CFDictionaryRef existingProperties = SKIndexCopyDocumentProperties(mSearchIndex, document);
     NSMutableDictionary *properties;
     if (existingProperties == nullptr) {
@@ -1016,6 +1027,46 @@
     NSURL *url = (NSURL *)((MSSplendidBarResultView *)view).representedObject;
     [self setDisplayedURL:[url absoluteString]];
     [self.urlBar selectText:self];
+}
+
+- (void)setTabTitle:(NSDictionary *)info {
+    NSTabViewItem *tabViewItem =
+        [self.tabView tabViewItemAtIndex:[[info objectForKey:@"index"] intValue]];
+    MSTabModel *tabModel = [tabViewItem identifier];
+    tabModel.title = [info objectForKey:@"title"];
+    if (tabModel.historyEntry != nil) {
+        tabModel.historyEntry.title = tabModel.title;
+        [self.managedObjectContext save:nil];
+    }
+}
+
+- (NSString *)titleOfCurrentTab {
+    return ((MSTabModel *)[[self.tabView selectedTabViewItem] identifier]).title;
+}
+
+- (void)setHistoryEntryForCurrentTab:(MSHistoryEntry *)historyEntry {
+    ((MSTabModel *)[[self.tabView selectedTabViewItem] identifier]).historyEntry = historyEntry;
+}
+
+// This must run in a background thread.
+- (void)determineBookmarkStateForURL:(NSString *)url {
+    NSAssert([NSThread currentThread] != [NSThread mainThread],
+             @"Don't color the bookmarks star on the main thread!");
+    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] init];
+    managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"url = %@", url]];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"MSBookmark"
+                                        inManagedObjectContext:managedObjectContext]];
+    NSArray *matchingBookmarks = [managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    [self performSelectorOnMainThread:@selector(updateBookmarkState:)
+                           withObject:[NSNumber numberWithBool:[matchingBookmarks count] > 0]
+                        waitUntilDone:NO];
+}
+
+- (void)updateBookmarkState:(NSNumber *)state {
+    NSString *imageName = [state boolValue] ? @"BookmarkExistsIcon" : @"BookmarkIcon";
+    [self.bookmarksButton setImage:[NSImage imageNamed:imageName] forSegment:BOOKMARK_SEGMENT];
 }
 
 @end

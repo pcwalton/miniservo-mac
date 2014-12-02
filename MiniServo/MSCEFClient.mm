@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Mozilla Foundation. All rights reserved.
 //
 
+#import "MSAppDelegate.h"
+#import "NSString+MSStringAdditions.h"
 #include "MSCEFClient.h"
 #include <include/cef_client.h>
 
@@ -61,5 +63,16 @@
                                                    int httpStatusCode) {
     [mAppDelegate performSelectorOnMainThread:@selector(addHistoryEntryForMainFrame:)
                                    withObject:nil
+                                waitUntilDone:NO];
+}
+
+/* virtual override */ void MSCEFClient::Visit(const CefString &string) {
+    [mAppDelegate performSelectorOnMainThread:@selector(setTabTitle:)
+                                   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                               [NSString stringWithCEFString:string],
+                                               @"title",
+                                               [NSNumber numberWithInt:0],
+                                               @"index",
+                                               nil]
                                 waitUntilDone:NO];
 }

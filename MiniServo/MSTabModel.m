@@ -7,14 +7,19 @@
 //
 
 #import "MSTabModel.h"
+#import "MSHistoryEntry.h"
 
 @implementation MSTabModel
 
-@synthesize isProcessing = _isProcessing;
+@synthesize isProcessing = mIsProcessing;
+@synthesize title = mTitle;
+@synthesize historyEntry = mHistoryEntry;
 
 - (id)init {
     self = [super init];
-    _isProcessing = NO;
+    mIsProcessing = NO;
+    mTitle = nil;
+    mHistoryEntry = nil;
     return self;
 }
 

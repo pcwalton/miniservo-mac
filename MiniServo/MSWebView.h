@@ -1,5 +1,5 @@
 //
-//  MSView.h
+//  MSWebView.h
 //  MiniServo
 //
 //  Created by Patrick Walton on 11/6/14.
@@ -13,7 +13,7 @@
 
 class MSCEFClient;
 
-@interface MSView : NSView {
+@interface MSWebView : NSView {
     MSAppDelegate* appDelegate;
     NSOpenGLContext *glContext;
 }
