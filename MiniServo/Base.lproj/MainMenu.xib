@@ -16,6 +16,7 @@
             <connections>
                 <outlet property="actualSizeMenuItem" destination="onX-Qp-Vep" id="KWB-f8-0vO"/>
                 <outlet property="backForwardButton" destination="ujA-Th-KoY" id="5LG-QC-Xkl"/>
+                <outlet property="bookmarksAnimationView" destination="JrL-af-vjd" id="h9i-kV-Gu5"/>
                 <outlet property="bookmarksButton" destination="yeS-eu-7pL" id="IDn-VX-MXO"/>
                 <outlet property="bookmarksButtonArrayController" destination="m7q-FA-Ajd" id="32v-Br-9B1"/>
                 <outlet property="bookmarksMenu" destination="R7i-iK-bLR" id="uCv-HQ-k8W"/>
@@ -351,6 +352,17 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="View" autoenablesItems="NO" id="U1f-un-He6">
                         <items>
+                            <menuItem title="Stop" keyEquivalent="." id="1dk-ZK-3j9">
+                                <connections>
+                                    <action selector="stop:" target="Voe-Tx-rLC" id="uBe-lz-QnE"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reload Page" keyEquivalent="r" id="FMk-UM-99N">
+                                <connections>
+                                    <action selector="reload:" target="Voe-Tx-rLC" id="sZi-ca-uWU"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="1kf-dv-ZmF"/>
                             <menuItem title="Actual Size" keyEquivalent="0" id="onX-Qp-Vep">
                                 <connections>
                                     <action selector="zoomToActualSize:" target="Voe-Tx-rLC" id="Nfy-Fs-BL0"/>
@@ -456,6 +468,9 @@
                     <customView id="9Jh-FK-B0G" customClass="MSWebView">
                         <rect key="frame" x="0.0" y="0.0" width="960" height="728"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <connections>
+                            <outlet property="menu" destination="Hfo-n8-vHv" id="6Nw-Fx-Lg0"/>
+                        </connections>
                     </customView>
                     <customView id="FpV-uP-3Md" customClass="MMTabBarView">
                         <rect key="frame" x="0.0" y="728" width="960" height="22"/>
@@ -818,6 +833,64 @@
                 </subviews>
             </view>
         </window>
+        <window title="Bookmarks Animation" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hasShadow="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="Eyc-Z0-Maj">
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="131" y="159" width="480" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <view key="contentView" id="JrL-af-vjd">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </view>
+        </window>
+        <menu id="Hfo-n8-vHv" userLabel="Web Popup Menu">
+            <items>
+                <menuItem id="abW-g1-7Fw" userLabel="Navigation">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <outlet property="view" destination="ECm-iC-rwM" id="3N2-T0-cOF"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+        <customView id="ECm-iC-rwM">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="34"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button id="Twz-4c-neB" userLabel="Back">
+                    <rect key="frame" x="0.0" y="0.0" width="54" height="34"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="BackIcon" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="ChN-v6-fOy">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="goBack:" target="Voe-Tx-rLC" id="24p-sd-7Cm"/>
+                    </connections>
+                </button>
+                <button id="sw1-GY-AC1" userLabel="Forward">
+                    <rect key="frame" x="53" y="0.0" width="54" height="34"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="ForwardIcon" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="I2b-BL-ft2">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="goForward:" target="Voe-Tx-rLC" id="hhj-WL-oVN"/>
+                    </connections>
+                </button>
+                <button id="rL7-iE-wHz" userLabel="Reload">
+                    <rect key="frame" x="106" y="0.0" width="54" height="34"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="ReloadIcon" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="1Jq-FM-xbn">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="reload:" target="Voe-Tx-rLC" id="CTJ-uJ-o5Z"/>
+                    </connections>
+                </button>
+            </subviews>
+        </customView>
     </objects>
     <resources>
         <image name="BackIcon" width="18" height="18"/>

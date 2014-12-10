@@ -39,6 +39,15 @@
 #define SPLENDID_BAR_TOP_SPACING    0.0
 #define SPLENDID_BAR_ROW_HEIGHT     40.0
 
+#define BOOKMARK_ICON_SIZE              18.0
+#define BOOKMARK_ICON_SEPARATION        26.0
+#define BOOKMARK_ICON_Y_OFFSET          (-2.0)
+#define BOOKMARK_ICON_X_BEZIER_OFFSET   6.0
+#define BOOKMARK_ICON_Y_BEZIER_OFFSET   50.0
+#define BOOKMARK_ICON_PARTICLE_COUNT    5
+#define BOOKMARK_ICON_PARTICLE_SIZE     6.0
+#define BOOKMARK_ICON_PARTICLE_RADIUS   20.0
+
 #define SEARCH_AUTOCOMPLETE_URL \
     @"http://suggestqueries.google.com/complete/search?client=firefox&q=${QUERY}"
 #define SEARCH_URL @"http://google.com/search?q=${QUERY}"
@@ -240,6 +249,14 @@
         mBrowser->Reload();
 }
 
+- (IBAction)stop:(id)sender {
+    mBrowser->StopLoad();
+}
+
+- (IBAction)reload:(id)sender {
+    mBrowser->Reload();
+}
+
 - (IBAction)openFile:(id)sender {
     NSOpenPanel *openPanel = [[NSOpenPanel alloc] init];
     [openPanel setCanChooseDirectories:NO];
@@ -388,17 +405,44 @@
     [formattedURL appendAttributedString:
      [[NSAttributedString alloc] initWithString:[[url scheme] stringByAppendingString:@"://"]
                                      attributes:dimmedAttributes]];
+    
     // TODO(pcwalton): username, password, port
+    NSString *username = [url user];
+    if (username != nil)
+        username = [username stringByAppendingString:@"@"];
+    else
+        username = @"";
+    [formattedURL appendAttributedString:
+     [[NSAttributedString alloc] initWithString:username attributes:dimmedAttributes]];
+    
     NSString *host = [url host];
     if (host == nil)
         host = [[NSString alloc] init];
     [formattedURL appendAttributedString:
      [[NSAttributedString alloc] initWithString:host attributes:darkAttributes]];
+    
+    NSString *port = [[url port] stringValue];
+    if (port == nil)
+        port = [[NSString alloc] init];
+    else
+        port = [@":" stringByAppendingString:port];
+    [formattedURL appendAttributedString:
+     [[NSAttributedString alloc] initWithString:port attributes:darkAttributes]];
+
     NSString *path = [url path];
     if (path == nil)
         path = [[NSString alloc] init];
     [formattedURL appendAttributedString:
      [[NSAttributedString alloc] initWithString:path attributes:dimmedAttributes]];
+    
+    NSString *query = [url query];
+    if (query == nil)
+        query = [[NSString alloc] init];
+    else
+        query = [@"?" stringByAppendingString:query];
+    [formattedURL appendAttributedString:
+     [[NSAttributedString alloc] initWithString:query attributes:dimmedAttributes]];
+    
     [self.urlBar setAttributedStringValue: formattedURL];
 }
 
@@ -451,9 +495,9 @@
 }
 
 - (void)setIsLoading:(BOOL)isLoading {
-    [[[self.tabView selectedTabViewItem] identifier] setValue:[NSNumber numberWithBool:isLoading]
-                                                   forKeyPath:@"isProcessing"];
-    
+    MSTabModel *tabModel = [[self.tabView selectedTabViewItem] identifier];
+    [tabModel setValue:[NSNumber numberWithBool:isLoading] forKeyPath:@"isProcessing"];
+
     // For some reason the tab view will sometimes make the progress indicator be one pixel too
     // tall. This is really ugly, so we fix that manually by hammering in a square shape.
     NSProgressIndicator *indicator = [[self.tabBar lastAttachedButton] indicator];
@@ -465,8 +509,16 @@
         [self.statusBarWindow orderOut:self];
         return;
     }
-    
-    [self.statusBar setStringValue:@"Loading…"];
+
+    NSString *labelString;
+    if (tabModel.historyEntry == nil) {
+        labelString = @"Loading…";
+    } else {
+        labelString = [NSString stringWithFormat:@"Loading %@…",
+                       [[NSURL URLWithString: tabModel.historyEntry.url] host]];
+    }
+
+    [self.statusBar setStringValue:labelString];
     [self.statusBar sizeToFit];
     NSSize statusBarSize = NSMakeSize([self.statusBar frame].size.width + 8.0,
                                       [self.statusBar frame].size.height + 6.0);
@@ -529,12 +581,33 @@
 - (IBAction)bookmarkCurrentPageOrShowBookmarksPopover:(id)sender {
     NSSegmentedControl* control = (NSSegmentedControl*)sender;
     switch ([control selectedSegment]) {
-        case BOOKMARK_SEGMENT:
-            [self bookmarkCurrentPage:sender];
+        case BOOKMARK_SEGMENT: {
+            NSString *url = [NSString stringWithCEFString:mBrowser->GetMainFrame()->GetURL()];
+            [self performSelectorInBackground:@selector(bookmarkOrUnbookmarkCurrentPage:)
+                                   withObject:url];
             break;
+        }
         case SHOW_BOOKMARKS_SEGMENT:
             [self showBookmarksPopover];
             break;
+    }
+}
+
+- (void)bookmarkOrUnbookmarkCurrentPage:(NSString *)pageURL {
+    if ([self bookmarkForURL:pageURL] == nil) {
+        [self performSelectorOnMainThread:@selector(bookmarkCurrentPage:)
+                               withObject:nil
+                            waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(playBookmarkAnimation:)
+                               withObject:nil
+                            waitUntilDone:NO];
+    } else {
+        NSString *url = [NSString stringWithCEFString:mBrowser->GetMainFrame()->GetURL()];
+        [self performSelectorInBackground:@selector(unbookmarkCurrentPage:) withObject:url];
+        [self performSelectorOnMainThread:@selector(updateBookmarkState:)
+                               withObject:[NSNumber numberWithBool:NO]
+                            waitUntilDone:NO];
+        
     }
 }
 
@@ -552,6 +625,15 @@
     [self.managedObjectContext save:nil];
     
     [self updateBookmarkState:[NSNumber numberWithBool:YES]];
+}
+
+// This must run on a background thread.
+- (void)unbookmarkCurrentPage:(NSString *)url {
+    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] init];
+    managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
+    MSBookmark *bookmark = [self bookmarkForURL:url withManagedObjectContext:managedObjectContext];
+    [managedObjectContext deleteObject:bookmark];
+    [managedObjectContext save:nil];
 }
 
 - (void)showBookmarksPopover {
@@ -713,25 +795,7 @@
     [self.managedObjectContext save:nil];
     
     // Add the history entry to the search index.
-    SKDocumentRef document =
-        SKDocumentCreateWithURL((__bridge CFURLRef)[NSURL URLWithString:entry.url]);
-    NSString *documentText = [NSString stringWithFormat:@"%@ %@", entry.url, entry.title];
-    if (documentText == nil)
-        documentText = @"";
-    SKIndexAddDocumentWithText(mSearchIndex, document, (__bridge CFStringRef)documentText, true);
-    CFDictionaryRef existingProperties = SKIndexCopyDocumentProperties(mSearchIndex, document);
-    NSMutableDictionary *properties;
-    if (existingProperties == nullptr) {
-        properties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSArray array],
-                      @"visits",
-                      nil];
-    } else {
-        properties = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary *)existingProperties];
-    }
-    [properties setObject:entry.title forKey:@"title"];
-    [properties setObject:[[properties objectForKey:@"visits"] arrayByAddingObject:entry.date]
-                   forKey:@"visits"];
-    SKIndexSetDocumentProperties(mSearchIndex, document, (__bridge CFDictionaryRef)properties);
+    [self updateSplendidBarDocumentForHistoryEntry:entry];
 }
 
 - (void)performSplendidBarSearch:(NSString *)query {
@@ -764,10 +828,32 @@
                                 searchResultScores,
                                 0,
                                 &searchResultsFoundThisRound);
+        
+        NSMutableArray *documents = [[NSMutableArray alloc] init];
         if (searchResultsFoundThisRound > 0) {
-            NSMutableArray *documents = [[NSMutableArray alloc] init];
-            for (NSUInteger i = 0; i < searchResultsFoundThisRound; i++)
-                [documents addObject:[NSNumber numberWithLong:searchResultDocuments[i]]];
+            
+            // FIXME(pcwalton): Sometimes SearchKit gives us invalid documents in a search (IDs that
+            // don't map to documents). I don't know why. We have to filter them out.
+            NSUInteger goodSearchResultsFoundThisRound = 0;
+            for (NSUInteger i = 0; i < searchResultsFoundThisRound; i++) {
+                SKDocumentRef document =
+                    SKIndexCopyDocumentForDocumentID(mSearchIndex, searchResultDocuments[i]);
+                if (document == nullptr)
+                    continue;
+                NSDictionary *properties =
+                (__bridge NSDictionary *)SKIndexCopyDocumentProperties(mSearchIndex, document);
+                NSMutableDictionary *augmentedProperties =
+                [[NSMutableDictionary alloc] initWithDictionary:properties];
+                [augmentedProperties setObject:(__bridge NSURL *)SKDocumentCopyURL(document)
+                                        forKey:@"url"];
+                goodSearchResultsFoundThisRound++;
+                [documents addObject:augmentedProperties];
+                CFRelease(document);
+            }
+            searchResultsFoundThisRound = goodSearchResultsFoundThisRound;
+        }
+
+        if (searchResultsFoundThisRound > 0) {
             NSDictionary *splendidBarUpdateInfo =
             [NSDictionary dictionaryWithObjectsAndKeys:documents,
              @"documents",
@@ -781,8 +867,9 @@
                                    withObject:splendidBarUpdateInfo
                                 waitUntilDone:NO];
         }
+
         totalSearchResultsFound += searchResultsFoundThisRound;
-    } while (stillGoing);
+    } while (stillGoing && totalSearchResultsFound < MS_HISTORY_BOOKMARKS_AUTOCOMPLETE_SIZE);
 }
 
 - (void)updateSplendidBarWithHistoryAndBookmarkInfo:(NSDictionary *)info {
@@ -797,11 +884,7 @@
         [mSplendidBarHistoryAndBookmarkEntryViews replaceObjectAtIndex:i withObject:[NSNull null]];
     
     NSUInteger i = searchResultLocation;
-    for (NSNumber *cocoaDocumentID in documents) {
-        SKDocumentID documentID = [cocoaDocumentID longValue];
-        SKDocumentRef document = SKIndexCopyDocumentForDocumentID(mSearchIndex, documentID);
-        NSDictionary *properties =
-            (__bridge NSDictionary *)SKIndexCopyDocumentProperties(mSearchIndex, document);
+    for (NSDictionary *properties in documents) {
         MSSplendidBarResultView *resultView =
             [[MSSplendidBarResultView alloc] initWithFrame:NSMakeRect(0.0,
                                                                       200.0,
@@ -810,7 +893,7 @@
         [resultView setAutoresizingMask:NSViewWidthSizable];
         [resultView setDrawsBackground:NO];
         resultView.splendidBarResultDelegate = self;
-        resultView.representedObject = (__bridge NSURL *)SKDocumentCopyURL(document);
+        resultView.representedObject = [properties objectForKey:@"url"];
         NSMutableAttributedString *resultText = [resultView textStorage];
         [resultText replaceCharactersInRange:NSMakeRange(0, [resultText length]) withString:@""];
         
@@ -1037,7 +1120,30 @@
     if (tabModel.historyEntry != nil) {
         tabModel.historyEntry.title = tabModel.title;
         [self.managedObjectContext save:nil];
+        [self updateSplendidBarDocumentForHistoryEntry:tabModel.historyEntry];
     }
+}
+
+- (void)updateSplendidBarDocumentForHistoryEntry:(MSHistoryEntry *)entry {
+    SKDocumentRef document =
+    SKDocumentCreateWithURL((__bridge CFURLRef)[NSURL URLWithString:entry.url]);
+    NSString *documentText = [NSString stringWithFormat:@"%@ %@", entry.url, entry.title];
+    if (documentText == nil)
+        documentText = @"";
+    SKIndexAddDocumentWithText(mSearchIndex, document, (__bridge CFStringRef)documentText, true);
+    CFDictionaryRef existingProperties = SKIndexCopyDocumentProperties(mSearchIndex, document);
+    NSMutableDictionary *properties;
+    if (existingProperties == nullptr) {
+        properties = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSArray array],
+                      @"visits",
+                      nil];
+    } else {
+        properties = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary *)existingProperties];
+    }
+    [properties setObject:entry.title forKey:@"title"];
+    [properties setObject:[[properties objectForKey:@"visits"] arrayByAddingObject:entry.date]
+                   forKey:@"visits"];
+    SKIndexSetDocumentProperties(mSearchIndex, document, (__bridge CFDictionaryRef)properties);
 }
 
 - (NSString *)titleOfCurrentTab {
@@ -1047,26 +1153,120 @@
 - (void)setHistoryEntryForCurrentTab:(MSHistoryEntry *)historyEntry {
     ((MSTabModel *)[[self.tabView selectedTabViewItem] identifier]).historyEntry = historyEntry;
 }
-
+     
 // This must run in a background thread.
-- (void)determineBookmarkStateForURL:(NSString *)url {
+- (MSBookmark *)bookmarkForURL:(NSString *)url
+      withManagedObjectContext: (NSManagedObjectContext *)managedObjectContext {
     NSAssert([NSThread currentThread] != [NSThread mainThread],
              @"Don't color the bookmarks star on the main thread!");
-    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] init];
-    managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"url = %@", url]];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"MSBookmark"
                                         inManagedObjectContext:managedObjectContext]];
     NSArray *matchingBookmarks = [managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    return [matchingBookmarks count] > 0 ? [matchingBookmarks objectAtIndex:0] : nil;
+}
+
+- (MSBookmark *)bookmarkForURL:(NSString *)url {
+    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] init];
+    managedObjectContext.persistentStoreCoordinator = mPersistentStoreCoordinator;
+    return [self bookmarkForURL:url withManagedObjectContext:managedObjectContext];
+}
+
+// This must run in a background thread.
+- (void)determineBookmarkStateForURL:(NSString *)url {
+    BOOL hasBookmark = [self bookmarkForURL:url] != nil;
     [self performSelectorOnMainThread:@selector(updateBookmarkState:)
-                           withObject:[NSNumber numberWithBool:[matchingBookmarks count] > 0]
+                           withObject:[NSNumber numberWithBool:hasBookmark]
                         waitUntilDone:NO];
 }
 
 - (void)updateBookmarkState:(NSNumber *)state {
     NSString *imageName = [state boolValue] ? @"BookmarkExistsIcon" : @"BookmarkIcon";
     [self.bookmarksButton setImage:[NSImage imageNamed:imageName] forSegment:BOOKMARK_SEGMENT];
+}
+
+- (void)playBookmarkAnimation:(NSSegmentedControl *)sender {
+    CALayer *mainLayer = [[CALayer alloc] init];
+    NSRect frame = [self.bookmarksAnimationView frame];
+    [mainLayer setBounds:frame];
+    
+    CALayer *centerStar = [[CALayer alloc] init];
+    centerStar.contents = [NSImage imageNamed:@"BookmarkExistsIcon"];
+    [mainLayer addSublayer:centerStar];
+    [centerStar setBounds:NSMakeRect(0.0, 0.0, BOOKMARK_ICON_SIZE, BOOKMARK_ICON_SIZE)];
+    CGPoint origin = CGPointMake(frame.size.width / 2.0 - BOOKMARK_ICON_SEPARATION / 2.0,
+                                 frame.size.height / 2.0 + BOOKMARK_ICON_Y_OFFSET);
+    [centerStar setPosition:origin];
+    
+    CALayer *particleStars[5];
+    for (int i = 0; i < BOOKMARK_ICON_PARTICLE_COUNT; i++) {
+        particleStars[i] = [[CALayer alloc] init];
+        particleStars[i].contents = [NSImage imageNamed:@"BookmarkExistsIcon"];
+        [mainLayer addSublayer:particleStars[i]];
+        [particleStars[i] setBounds:NSMakeRect(0.0,
+                                               0.0,
+                                               BOOKMARK_ICON_PARTICLE_SIZE,
+                                               BOOKMARK_ICON_PARTICLE_SIZE)];
+        [particleStars[i] setPosition:origin];
+    }
+
+    CGMutablePathRef mainPath = CGPathCreateMutable();
+    CGPathMoveToPoint(mainPath, nullptr, origin.x, origin.y);
+    CGPathAddCurveToPoint(mainPath,
+                          nullptr,
+                          origin.x,
+                          origin.y,
+                          origin.x + BOOKMARK_ICON_SEPARATION / 2.0 - BOOKMARK_ICON_X_BEZIER_OFFSET,
+                          origin.y + BOOKMARK_ICON_Y_BEZIER_OFFSET,
+                          origin.x + BOOKMARK_ICON_SEPARATION,
+                          origin.y);
+    CAKeyframeAnimation *mainAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    [mainAnimation setPath:mainPath];
+    [mainAnimation setDuration:0.3];
+    [centerStar addAnimation:mainAnimation forKey:@"position"];
+    CFRelease(mainPath);
+    
+    for (int i = 0; i < BOOKMARK_ICON_PARTICLE_COUNT; i++) {
+        CGFloat angle = M_PI_2 + ((CGFloat)i * 2.0 * M_PI / (CGFloat)BOOKMARK_ICON_PARTICLE_COUNT);
+        CGPoint destination = CGPointMake(origin.x + BOOKMARK_ICON_PARTICLE_RADIUS * cosf(angle),
+                                          origin.y + BOOKMARK_ICON_PARTICLE_RADIUS * sinf(angle));
+        CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
+        positionAnimation.fromValue = [NSValue valueWithPoint:origin];
+        positionAnimation.toValue = [NSValue valueWithPoint:destination];
+        positionAnimation.duration = 0.3;
+        [positionAnimation setDelegate:self];
+        [particleStars[i] addAnimation:positionAnimation forKey:@"position"];
+    }
+
+    [self.bookmarksAnimationView setLayer:mainLayer];
+    [self.bookmarksAnimationView setWantsLayer:YES];
+    
+    NSRect mainWindowFrame = [self.window frame];
+    NSRect bookmarksButtonFrame = [self.bookmarksButton frame];
+    NSRect absoluteBookmarksButtonFrame =
+        NSMakeRect(bookmarksButtonFrame.origin.x + mainWindowFrame.origin.x,
+                   (mainWindowFrame.size.height - NSMaxY(bookmarksButtonFrame)) +
+                    mainWindowFrame.origin.y,
+                   bookmarksButtonFrame.size.width,
+                   bookmarksButtonFrame.size.height);
+    NSPoint absoluteBookmarksButtonCenter = NSMakePoint(NSMidX(absoluteBookmarksButtonFrame),
+                                                        NSMidY(absoluteBookmarksButtonFrame));
+    NSWindow *bookmarksAnimationWindow = [self.bookmarksAnimationView window];
+    NSSize bookmarksAnimationWindowSize = [bookmarksAnimationWindow frame].size;
+    [bookmarksAnimationWindow setFrame:
+     NSMakeRect(absoluteBookmarksButtonCenter.x - bookmarksAnimationWindowSize.width / 2.0,
+                absoluteBookmarksButtonCenter.y - bookmarksAnimationWindowSize.height / 2.0,
+                bookmarksAnimationWindowSize.width,
+                bookmarksAnimationWindowSize.height)
+                               display:NO];
+    [bookmarksAnimationWindow setOpaque:NO];
+    [bookmarksAnimationWindow setBackgroundColor:[NSColor clearColor]];
+    [bookmarksAnimationWindow orderFront:self];
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)finished {
+    [[self.bookmarksAnimationView window] orderOut:self];
 }
 
 @end

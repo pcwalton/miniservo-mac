@@ -13,7 +13,7 @@
 
 @interface MSTabModel : NSObject<MMTabBarItem> {
     BOOL mIsProcessing;
-    NSString *mtitle;
+    NSString *mTitle;
     MSHistoryEntry *mHistoryEntry;
 }
 
