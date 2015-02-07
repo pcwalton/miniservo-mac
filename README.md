@@ -1,8 +1,8 @@
 # MiniServo for the Mac
 
-This project is designed to be used with the Servo CEF fork here:
+This project is designed to be used with the mainline Servo branch:
 
-    https://github.com/pcwalton/chromium-embedded-framework
+    https://github.com/servo/servo
 
 ## Prerequisites
 
